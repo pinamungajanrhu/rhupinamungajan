@@ -1,0 +1,159 @@
+const express = require('express');
+const sqlite3 = require('sqlite3').verbose();
+const path = require('path');
+const { authenticateToken, authorizeRole } = require('../middleware/auth');
+
+const router = express.Router();
+const dbPath = path.join(__dirname, '..', 'database', 'rhu.db');
+const db = new sqlite3.Database(dbPath);
+
+// Get all residents with role-based filtering
+router.get('/', authenticateToken, (req, res) => {
+  const { role } = req.user;
+  const { status, barangay, search } = req.query;
+  
+  let query = 'SELECT * FROM residents WHERE 1=1';
+  const params = [];
+
+  // Role-based filtering
+  if (role === 'barangay') {
+    // Barangay users can only see residents they registered
+    query += ' AND created_by = ?';
+    params.push(req.user.id);
+  }
+
+  // Status filtering
+  if (status) {
+    query += ' AND status = ?';
+    params.push(status);
+  }
+
+  // Barangay filtering
+  if (barangay) {
+    query += ' AND barangay = ?';
+    params.push(barangay);
+  }
+
+  // Search filtering
+  if (search) {
+    query += ' AND (first_name LIKE ? OR last_name LIKE ? OR mobile LIKE ?)';
+    const searchTerm = `%${search}%`;
+    params.push(searchTerm, searchTerm, searchTerm);
+  }
+
+  query += ' ORDER BY created_at DESC';
+
+  db.all(query, params, (err, residents) => {
+    if (err) {
+      return res.status(500).json({ error: 'Database error' });
+    }
+    res.json(residents);
+  });
+});
+
+// Get resident by ID
+router.get('/:id', authenticateToken, (req, res) => {
+  const { id } = req.params;
+  const { role } = req.user;
+
+  db.get('SELECT * FROM residents WHERE id = ?', [id], (err, resident) => {
+    if (err) {
+      return res.status(500).json({ error: 'Database error' });
+    }
+
+    if (!resident) {
+      return res.status(404).json({ error: 'Resident not found' });
+    }
+
+    // Role-based data filtering
+    if (role === 'barangay') {
+      // Limit data for barangay users
+      const limitedResident = {
+        id: resident.id,
+        first_name: resident.first_name,
+        last_name: resident.last_name,
+        birthdate: resident.birthdate,
+        barangay: resident.barangay,
+        mobile: resident.mobile,
+        philhealth_number: resident.philhealth_number,
+        status: resident.status,
+        created_at: resident.created_at
+      };
+      return res.json(limitedResident);
+    }
+
+    res.json(resident);
+  });
+});
+
+// Create new resident (Barangay Encoder only)
+router.post('/', authenticateToken, authorizeRole(['barangay']), (req, res) => {
+  const residentData = req.body;
+  
+  // Set initial status and created_by
+  residentData.status = residentData.philhealth_number ? 'Pending RHU Validation' : 'Pending RHU Validation';
+  residentData.created_by = req.user.id; // Add created_by field
+  residentData.created_at = new Date().toISOString();
+  
+  const columns = Object.keys(residentData).join(', ');
+  const placeholders = Object.keys(residentData).map(() => '?').join(', ');
+  const values = Object.values(residentData);
+
+  db.run(
+    `INSERT INTO residents (${columns}) VALUES (${placeholders})`,
+    values,
+    function(err) {
+      if (err) {
+        console.error('Error creating resident:', err);
+        return res.status(500).json({ error: 'Failed to create resident' });
+      }
+
+      res.status(201).json({
+        id: this.lastID,
+        message: 'Resident created successfully'
+      });
+    }
+  );
+});
+
+// Update resident (RHU Staff and Doctor only)
+router.put('/:id', authenticateToken, authorizeRole(['rhu', 'doctor']), (req, res) => {
+  const { id } = req.params;
+  const updateData = req.body;
+  updateData.updated_at = new Date().toISOString();
+
+  const setClause = Object.keys(updateData).map(key => `${key} = ?`).join(', ');
+  const values = [...Object.values(updateData), id];
+
+  db.run(
+    `UPDATE residents SET ${setClause} WHERE id = ?`,
+    values,
+    function(err) {
+      if (err) {
+        return res.status(500).json({ error: 'Failed to update resident' });
+      }
+
+      if (this.changes === 0) {
+        return res.status(404).json({ error: 'Resident not found' });
+      }
+
+      res.json({ message: 'Resident updated successfully' });
+    }
+  );
+});
+
+// Get barangay list for dropdown
+router.get('/barangays/list', authenticateToken, (req, res) => {
+  db.all(
+    'SELECT DISTINCT barangay FROM residents ORDER BY barangay',
+    [],
+    (err, barangays) => {
+      if (err) {
+        return res.status(500).json({ error: 'Database error' });
+      }
+      res.json(barangays.map(b => b.barangay));
+    }
+  );
+});
+
+module.exports = router;
