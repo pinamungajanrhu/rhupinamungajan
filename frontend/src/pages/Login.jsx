@@ -34,7 +34,7 @@ const Login = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-50 flex items-center justify-center p-4 font-sans">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -49,8 +49,8 @@ const Login = () => {
             transition={{ delay: 0.2, duration: 0.3 }}
             className="text-center mb-8"
           >
-            <div className="w-16 h-16 bg-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <span className="text-white font-bold text-2xl">RHU</span>
+            <div className="w-20 h-20 flex items-center justify-center mx-auto mb-4">
+              <img src="/rhu logo-Photoroom.png" alt="RHU Logo" className="w-full h-full object-contain" />
             </div>
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
               Pinamungahan Health System

@@ -9,6 +9,7 @@ import PatientProfile from './pages/PatientProfile'
 import Assessment from './pages/Assessment'
 import Consultation from './pages/Consultation'
 import Reports from './pages/Reports'
+import Landing from './pages/Landing'
 import Layout from './components/Layout'
 
 function App() {
@@ -29,15 +30,18 @@ function App() {
   return (
     <AnimatePresence mode="wait">
       <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<Landing />} />
         <Route 
           path="/login" 
           element={
             user ? <Navigate to="/dashboard" replace /> : <Login />
           } 
         />
+
+        {/* Protected Routes */}
         {user ? (
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Navigate to="/dashboard" replace />} />
+          <Route element={<Layout />}>
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="patients" element={<Patients />} />
             <Route path="register" element={<RegisterPatient />} />

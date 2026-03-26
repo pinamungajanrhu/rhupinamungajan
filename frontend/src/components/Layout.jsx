@@ -73,7 +73,7 @@ const Layout = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gray-50 flex font-sans">
       {/* Sidebar */}
       <motion.aside
         initial={false}
@@ -82,8 +82,8 @@ const Layout = () => {
       >
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">RHU</span>
+            <div className="w-10 h-10 flex items-center justify-center">
+              <img src="/rhu logo-Photoroom.png" alt="RHU Logo" className="w-full h-full object-contain" />
             </div>
             <div>
               <h1 className="font-semibold text-gray-900">Pinamungahan</h1>
