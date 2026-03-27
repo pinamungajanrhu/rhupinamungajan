@@ -34,6 +34,7 @@ const Landing = () => {
   const navigate = useNavigate()
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [communitySlideIndex, setCommunitySlideIndex] = useState(0)
+  const [hoveredService, setHoveredService] = useState(null)
 
   // New images from public folder
   const rhuImages = [
@@ -423,22 +424,40 @@ const Landing = () => {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="relative bg-gradient-to-br from-slate-900 to-slate-950 rounded-[2.5rem] p-10 border border-white/10 overflow-hidden"
+              onMouseEnter={() => setHoveredService('medical')}
+              onMouseLeave={() => setHoveredService(null)}
+              className="relative bg-gradient-to-br from-slate-900 to-slate-950 rounded-[2.5rem] p-10 border border-white/10 overflow-hidden cursor-pointer transition-all duration-500 hover:border-primary-500/30"
             >
               {/* Background glow */}
               <div className="absolute top-0 right-0 w-64 h-64 bg-primary-500/5 rounded-full blur-3xl"></div>
               
-              <div className="relative flex items-center gap-4 mb-8">
+              <div className="relative flex items-center gap-4">
                 <div className="w-14 h-14 bg-gradient-to-br from-primary-500/20 to-primary-600/10 rounded-2xl flex items-center justify-center border border-primary-500/20">
                   <Stethoscope size={28} className="text-primary-400" />
                 </div>
-                <div>
+                <div className="flex-1">
                   <h4 className="text-2xl font-bold text-white">Medical Services</h4>
                   <span className="text-[10px] text-primary-400 uppercase tracking-wider font-semibold">Primary Care</span>
                 </div>
+                <motion.div
+                  animate={{ rotate: hoveredService === 'medical' ? 180 : 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="w-8 h-8 rounded-full bg-primary-500/10 flex items-center justify-center"
+                >
+                  <ChevronDown size={16} className="text-primary-400" />
+                </motion.div>
               </div>
               
-              {/* First Section */}
+              <motion.div
+                initial={false}
+                animate={{ 
+                  height: hoveredService === 'medical' ? 'auto' : 0,
+                  opacity: hoveredService === 'medical' ? 1 : 0
+                }}
+                transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
+                className="overflow-hidden"
+              >
+                <div className="pt-8">
               <ul className="space-y-1">
                 {[
                   'Medical Certificate',
@@ -508,6 +527,54 @@ const Landing = () => {
                   <span>Foreigner/Special</span>
                 </li>
               </ul>
+
+              {/* Updated as of 2026 - Badge Style */}
+              <div className="my-3 flex items-center gap-3">
+                <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary-500/30 to-transparent"></div>
+                <span className="px-3 py-1 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-xs font-semibold">Updated as of 2026</span>
+                <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary-500/30 to-transparent"></div>
+              </div>
+
+              {/* Second Section */}
+              <ul className="space-y-1">
+                {[
+                  'Tooth Extraction',
+                  'Tooth Filing',
+                  'Cleaning/Oral Prophylaxis',
+                  'Dental Certificate',
+                  'Burial Permit Fees',
+                  'Transfer of Cadaver',
+                  'Fee for Exhumation/Removal of Cadaver',
+                  'Animal Bite Treatment Center (ABTC) Fee'
+                ].map((item, i) => (
+                  <motion.li 
+                    key={i} 
+                    whileHover={{ x: 4 }}
+                    className="flex items-center gap-2 text-white/70 text-xs group cursor-default"
+                  >
+                    <span className="w-1 h-1 rounded-full bg-primary-500/50 group-hover:bg-primary-400 transition-colors"></span>
+                    <span className="group-hover:text-white/90 transition-colors">{item}</span>
+                  </motion.li>
+                ))}
+                <li className="flex items-center gap-2 text-white/70 text-xs mt-2">
+                  <span className="w-1 h-1 rounded-full bg-primary-500/50"></span>
+                  <span className="font-medium text-white/80">Pre-marriage Counseling Fee:</span>
+                </li>
+                <li className="flex items-center gap-2 text-white/50 text-xs ml-4">
+                  <span className="text-primary-500/40 text-[10px]">◦</span>
+                  <span>Residents</span>
+                </li>
+                <li className="flex items-center gap-2 text-white/50 text-xs ml-4">
+                  <span className="text-primary-500/40 text-[10px]">◦</span>
+                  <span>Non-residents</span>
+                </li>
+                <li className="flex items-center gap-2 text-white/50 text-xs ml-4">
+                  <span className="text-primary-500/40 text-[10px]">◦</span>
+                  <span>Foreigner/Special</span>
+                </li>
+              </ul>
+              </div>
+              </motion.div>
             </motion.div>
 
             {/* Laboratory Services */}
@@ -516,20 +583,40 @@ const Landing = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="relative bg-gradient-to-br from-slate-900 to-slate-950 rounded-[2.5rem] p-10 border border-white/10 overflow-hidden"
+              onMouseEnter={() => setHoveredService('lab')}
+              onMouseLeave={() => setHoveredService(null)}
+              className="relative bg-gradient-to-br from-slate-900 to-slate-950 rounded-[2.5rem] p-10 border border-white/10 overflow-hidden cursor-pointer transition-all duration-500 hover:border-rose-500/30"
             >
               {/* Background glow */}
               <div className="absolute top-0 right-0 w-64 h-64 bg-rose-500/5 rounded-full blur-3xl"></div>
               
-              <div className="relative flex items-center gap-4 mb-6">
+              <div className="relative flex items-center gap-4">
                 <div className="w-14 h-14 bg-gradient-to-br from-rose-500/20 to-rose-600/10 rounded-2xl flex items-center justify-center border border-rose-500/20">
                   <Activity size={28} className="text-rose-400" />
                 </div>
-                <div>
+                <div className="flex-1">
                   <h4 className="text-2xl font-bold text-white">Laboratory Services</h4>
                   <span className="text-[10px] text-rose-400 uppercase tracking-wider font-semibold">Diagnostics</span>
                 </div>
+                <motion.div
+                  animate={{ rotate: hoveredService === 'lab' ? 180 : 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="w-8 h-8 rounded-full bg-rose-500/10 flex items-center justify-center"
+                >
+                  <ChevronDown size={16} className="text-rose-400" />
+                </motion.div>
               </div>
+              
+              <motion.div
+                initial={false}
+                animate={{ 
+                  height: hoveredService === 'lab' ? 'auto' : 0,
+                  opacity: hoveredService === 'lab' ? 1 : 0
+                }}
+                transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
+                className="overflow-hidden"
+              >
+                <div className="pt-6">
               
               {/* Hematology */}
               <div className="mb-3">
@@ -639,6 +726,8 @@ const Landing = () => {
                 </ul>
                 <p className="text-white/30 text-[10px] mt-1 ml-2 italic">*HIV Testing - for prenatal care and employment purposes only</p>
               </div>
+              </div>
+              </motion.div>
             </motion.div>
           </div>
         </div>
