@@ -441,7 +441,7 @@ const Landing = () => {
             </p>
           </div>
 
-          {/* Services Grid */}
+          {/* Services Grid - 2 Categories */}
           <div className="grid lg:grid-cols-2 gap-8">
             {/* Medical Services */}
             <motion.div
@@ -456,7 +456,7 @@ const Landing = () => {
                 </div>
                 <h4 className="text-2xl font-bold text-white">Medical Services</h4>
               </div>
-              <ul className="space-y-3">
+              <ul className="space-y-2">
                 {[
                   'Medical Certificate',
                   'Health Certificate',
@@ -468,32 +468,7 @@ const Landing = () => {
                   'Birthing Center Fee',
                   'Hygiene Examination',
                   'Drug Dependency Examination',
-                  'Pre-marriage Counseling (Residents, Non-residents, Foreigner/Special)'
-                ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 text-white/70 text-sm">
-                    <Check size={16} className="text-primary-500 mt-0.5 shrink-0" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-
-            {/* Dental Services */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="bg-slate-950 rounded-[2.5rem] p-10 border border-white/10"
-            >
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-14 h-14 bg-teal-600/20 rounded-2xl flex items-center justify-center">
-                  <Database size={28} className="text-teal-400" />
-                </div>
-                <h4 className="text-2xl font-bold text-white">Dental Services <span className="text-sm font-normal text-white/50">(Updated 2026)</span></h4>
-              </div>
-              <ul className="space-y-3">
-                {[
+                  'Pre-marriage Counseling (Residents, Non-residents, Foreigner/Special)',
                   'Tooth Extraction',
                   'Tooth Filing',
                   'Cleaning/Oral Prophylaxis',
@@ -504,108 +479,95 @@ const Landing = () => {
                   'Animal Bite Treatment Center (ABTC) Fee'
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-3 text-white/70 text-sm">
-                    <Check size={16} className="text-teal-500 mt-0.5 shrink-0" />
+                    <Check size={16} className="text-primary-500 mt-0.5 shrink-0" />
                     <span>{item}</span>
                   </li>
                 ))}
               </ul>
             </motion.div>
 
-            {/* Laboratory - Hematology & Blood Chemistry */}
+            {/* Laboratory Services - Updated as of 2026 */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
+              transition={{ delay: 0.1 }}
               className="bg-slate-950 rounded-[2.5rem] p-10 border border-white/10"
             >
-              <div className="flex items-center gap-4 mb-8">
+              <div className="flex items-center gap-4 mb-6">
                 <div className="w-14 h-14 bg-rose-600/20 rounded-2xl flex items-center justify-center">
                   <Activity size={28} className="text-rose-400" />
                 </div>
-                <h4 className="text-2xl font-bold text-white">Laboratory Services</h4>
+                <div>
+                  <h4 className="text-2xl font-bold text-white">Laboratory Services</h4>
+                  <p className="text-rose-400 text-sm font-medium">Updated as of 2026</p>
+                </div>
               </div>
               
-              <div className="mb-6">
-                <h5 className="text-primary-400 font-semibold mb-3 text-sm uppercase tracking-wider">Hematology</h5>
-                <ul className="space-y-2 mb-4">
-                  <li className="flex items-start gap-3 text-white/70 text-sm">
-                    <Check size={16} className="text-rose-500 mt-0.5 shrink-0" />
-                    <span>Complete Blood Count (CBC)</span>
-                  </li>
-                  <li className="flex items-start gap-3 text-white/70 text-sm">
-                    <Check size={16} className="text-rose-500 mt-0.5 shrink-0" />
-                    <span>Blood Typing</span>
-                  </li>
-                </ul>
+              {/* Hematology */}
+              <div className="mb-4">
+                <h5 className="text-primary-400 font-semibold mb-2 text-xs uppercase tracking-wider">Hematology</h5>
+                <div className="flex flex-wrap gap-x-4 gap-y-1">
+                  {['Complete Blood Count (CBC)', 'Blood Typing'].map((item, i) => (
+                    <li key={i} className="flex items-center gap-2 text-white/70 text-sm list-none">
+                      <Check size={14} className="text-rose-500 shrink-0" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </div>
               </div>
 
-              <div>
-                <h5 className="text-primary-400 font-semibold mb-3 text-sm uppercase tracking-wider">Blood Chemistry Tests</h5>
-                <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+              {/* Blood Chemistry */}
+              <div className="mb-4">
+                <h5 className="text-primary-400 font-semibold mb-2 text-xs uppercase tracking-wider">Blood Chemistry Tests</h5>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-1">
                   {[
-                    '75 grams OGTT', 'ALT/SGPT', 'AST/SGOT', 'BUN', 'BUA',
-                    'Calcium', 'Chloride', 'Creatinine', 'Fasting Blood Sugar',
-                    'Lipid Panel', 'Potassium', 'Random Blood Sugar', 'Sodium'
+                    '75 grams OGTT', 'ALT/SGPT', 'AST/SGOT', 'Blood Urea Nitrogen (BUN)',
+                    'Blood Uric Acid (BUA)', 'Calcium', 'Chloride', 'Creatinine',
+                    'Fasting Blood Sugar', 'Lipid Panel', 'Potassium', 'Random Blood Sugar', 'Sodium'
                   ].map((item, i) => (
-                    <li key={i} className="flex items-start gap-2 text-white/70 text-xs">
+                    <li key={i} className="flex items-start gap-2 text-white/70 text-xs list-none">
                       <Check size={12} className="text-rose-500 mt-0.5 shrink-0" />
                       <span>{item}</span>
                     </li>
                   ))}
                 </div>
               </div>
-            </motion.div>
 
-            {/* Laboratory - Clinical Microscopy & Immunologic */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
-              className="bg-slate-950 rounded-[2.5rem] p-10 border border-white/10"
-            >
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-14 h-14 bg-amber-600/20 rounded-2xl flex items-center justify-center">
-                  <Shield size={28} className="text-amber-400" />
-                </div>
-                <h4 className="text-2xl font-bold text-white">Diagnostics <span className="text-sm font-normal text-white/50">(Updated 2026)</span></h4>
-              </div>
-              
-              <div className="mb-6">
-                <h5 className="text-primary-400 font-semibold mb-3 text-sm uppercase tracking-wider">Clinical Microscopy</h5>
-                <ul className="space-y-2 mb-4">
+              {/* Clinical Microscopy */}
+              <div className="mb-4">
+                <h5 className="text-primary-400 font-semibold mb-2 text-xs uppercase tracking-wider">Clinical Microscopy Tests</h5>
+                <div className="flex flex-wrap gap-x-4 gap-y-1">
                   {[
-                    'Sputum Examination',
-                    'Stool Examination',
-                    'Fecal Occult Blood Test (FORT)',
-                    'Urinalysis'
+                    'Sputum Examination', 'Stool Examination',
+                    'Fecal Occult Blood Test (FORT)', 'Urinalysis'
                   ].map((item, i) => (
-                    <li key={i} className="flex items-start gap-3 text-white/70 text-sm">
-                      <Check size={16} className="text-amber-500 mt-0.5 shrink-0" />
+                    <li key={i} className="flex items-center gap-2 text-white/70 text-sm list-none">
+                      <Check size={14} className="text-rose-500 shrink-0" />
                       <span>{item}</span>
                     </li>
                   ))}
-                </ul>
+                </div>
               </div>
 
+              {/* Immunologic Tests */}
               <div>
-                <h5 className="text-primary-400 font-semibold mb-3 text-sm uppercase tracking-wider">Immunologic Tests</h5>
+                <h5 className="text-primary-400 font-semibold mb-2 text-xs uppercase tracking-wider">Immunologic Tests</h5>
                 <div className="grid grid-cols-2 gap-x-4 gap-y-1">
                   {[
-                    'Anti-HAV', 'COVID-19 Rapid Antigen', 'Dengue Duo',
+                    'Anti-HAV', 'COVID-19 Rapid Antigen Test', 'Dengue Duo',
                     'Dengue IgG/IgM', 'Dengue NS1', 'Free T3 (FT3)',
-                    'Free T4 (FT4)', 'HbA1c', 'Hepatitis B (HbsAg)',
-                    'HIV Testing*', 'Pregnancy Test (PT)', 'PSA',
-                    'Syphilis (VDRL)', 'TSH', 'Typhi DOT IgG/IgM'
+                    'Free T4 (FT4)', 'HbA1c', 'Hepatitis B Surface Antigen (HbsAg)',
+                    'HIV Testing fee*', 'Pregnancy Test (PT)', 'Prostate-Specific Antigen (PSA)',
+                    'Syphilis (VDRL)', 'Thyroid Stimulating Hormone (TSH)', 'Typhi DOT IgG/IgM'
                   ].map((item, i) => (
-                    <li key={i} className="flex items-start gap-2 text-white/70 text-xs">
-                      <Check size={12} className="text-amber-500 mt-0.5 shrink-0" />
+                    <li key={i} className="flex items-start gap-2 text-white/70 text-xs list-none">
+                      <Check size={12} className="text-rose-500 mt-0.5 shrink-0" />
                       <span>{item}</span>
                     </li>
                   ))}
                 </div>
-                <p className="text-white/40 text-xs mt-3 italic">*For prenatal care and employment purposes only</p>
+                <p className="text-white/40 text-xs mt-2 italic">*For prenatal care and employment purposes only</p>
               </div>
             </motion.div>
           </div>
