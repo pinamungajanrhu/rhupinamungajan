@@ -33,6 +33,7 @@ const Landing = () => {
   const { user, loading, logout } = useAuth()
   const navigate = useNavigate()
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [communitySlideIndex, setCommunitySlideIndex] = useState(0)
 
   // New images from public folder
   const rhuImages = [
@@ -43,6 +44,15 @@ const Landing = () => {
     '/475505814_122145504062381937_8222510245037428534_n.jpg'
   ]
 
+  // Community section slideshow images
+  const communityImages = [
+    { img: rhuImages[0], title: 'Patient-First Care', desc: 'Personalized medical attention for every resident.' },
+    { img: rhuImages[1], title: 'Community Health Programs', desc: 'Reaching out to all 26 barangays with quality healthcare.' },
+    { img: rhuImages[2], title: 'Maternal Health Services', desc: 'Comprehensive care for mothers and newborns.' },
+    { img: rhuImages[3], title: 'Modern Health Facilities', desc: 'Equipped with the latest medical technology.' },
+    { img: rhuImages[4], title: 'Dedicated Healthcare Team', desc: 'Professional staff committed to serving the community.' }
+  ]
+
   // Auto-rotate background images
   useEffect(() => {
     const interval = setInterval(() => {
@@ -51,6 +61,14 @@ const Landing = () => {
     return () => clearInterval(interval)
   }, [rhuImages.length])
 
+  // Auto-rotate community section images
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCommunitySlideIndex((prev) => (prev + 1) % communityImages.length)
+    }, 6000) // Change every 6 seconds
+    return () => clearInterval(interval)
+  }, [communityImages.length])
+
   // Manual navigation functions
   const nextImage = () => {
     setCurrentImageIndex((prev) => (prev + 1) % rhuImages.length)
@@ -58,6 +76,14 @@ const Landing = () => {
 
   const prevImage = () => {
     setCurrentImageIndex((prev) => (prev - 1 + rhuImages.length) % rhuImages.length)
+  }
+
+  const nextCommunitySlide = () => {
+    setCommunitySlideIndex((prev) => (prev + 1) % communityImages.length)
+  }
+
+  const prevCommunitySlide = () => {
+    setCommunitySlideIndex((prev) => (prev - 1 + communityImages.length) % communityImages.length)
   }
 
   const features = [
@@ -278,18 +304,33 @@ const Landing = () => {
 
       </section>
 
-      {/* Community Section - Dark Theme (No Background Image) */}
+      {/* Community Section - Slideshow with Services Intro */}
       <section id="community" className="relative py-32 bg-slate-950">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full relative z-10">
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-24 gap-10">
+          {/* Header with Services Intro */}
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-16 gap-10">
             <div className="max-w-2xl">
               <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/10 border border-white/20 mb-6">
                 <Users size={16} className="text-primary-400" />
                 <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/90">Our Community</span>
               </div>
-              <h3 className="text-5xl lg:text-7xl font-bold text-white leading-tight tracking-tighter">
+              <h3 className="text-5xl lg:text-7xl font-bold text-white leading-tight tracking-tighter mb-6">
                 Serving with <br /> <span className="text-primary-400 underline decoration-8 decoration-primary-500/50 underline-offset-8">Excellence.</span>
               </h3>
+              {/* Services Intro */}
+              <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
+                <h4 className="text-lg font-semibold text-primary-400 mb-3 flex items-center gap-2">
+                  <Stethoscope size={20} />
+                  Our Services
+                </h4>
+                <p className="text-white/70 text-sm leading-relaxed">
+                  We provide comprehensive primary care including maternal & child health services, 
+                  family planning, immunization programs, health risk assessments (PCHRAT), 
+                  TB screening and control, chronic disease management for hypertension & diabetes, 
+                  senior citizen care, and dental health services. Our DOH-accredited facility 
+                  ensures quality healthcare reaches all 26 barangays of Pinamungahan.
+                </p>
+              </div>
             </div>
             <p className="text-xl text-white/70 max-w-sm font-semibold leading-relaxed">
               Real moments from our daily operations, showcasing our commitment to 
@@ -297,43 +338,116 @@ const Landing = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {[
-              { img: rhuImages[0], title: 'Patient-First Care', desc: 'Personalized medical attention for every resident.' },
-              { img: rhuImages[4], title: 'Unified Healthcare', desc: 'A professional team working with modern tools.' },
-              { special: true, title: 'Secure & Accessible', desc: 'Digital records built with the highest privacy standards.' }
-            ].map((item, i) => (
-              <motion.div 
-                key={i}
-                whileHover={{ y: -15, scale: 1.02 }}
-                className="group relative"
+          {/* Slideshow Container */}
+          <div className="relative">
+            {/* Main Slideshow Image */}
+            <div className="relative h-[500px] lg:h-[600px] rounded-[3rem] overflow-hidden shadow-2xl border-4 border-white/10">
+              {communityImages.map((item, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: index === communitySlideIndex ? 1 : 0 }}
+                  transition={{ duration: 0.8, ease: "easeInOut" }}
+                  className="absolute inset-0"
+                >
+                  <img 
+                    src={item.img} 
+                    alt={item.title} 
+                    className="w-full h-full object-cover object-top"
+                  />
+                  {/* Overlay with text */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent"></div>
+                  <div className="absolute bottom-0 left-0 right-0 p-10 lg:p-16">
+                    <motion.h4 
+                      initial={{ y: 20, opacity: 0 }}
+                      animate={{ y: index === communitySlideIndex ? 0 : 20, opacity: index === communitySlideIndex ? 1 : 0 }}
+                      transition={{ delay: 0.3, duration: 0.5 }}
+                      className="text-4xl lg:text-5xl font-bold text-white mb-4"
+                    >
+                      {item.title}
+                    </motion.h4>
+                    <motion.p 
+                      initial={{ y: 20, opacity: 0 }}
+                      animate={{ y: index === communitySlideIndex ? 0 : 20, opacity: index === communitySlideIndex ? 1 : 0 }}
+                      transition={{ delay: 0.4, duration: 0.5 }}
+                      className="text-xl text-white/80 font-medium max-w-2xl"
+                    >
+                      {item.desc}
+                    </motion.p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Navigation Controls */}
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 z-20">
+              {/* Prev Button */}
+              <motion.button
+                onClick={prevCommunitySlide}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center text-white hover:bg-white/30 transition-all"
               >
-                {item.special ? (
-                  <div className="h-[450px] rounded-[3rem] bg-white/10 p-12 flex flex-col justify-between text-white shadow-2xl relative overflow-hidden border border-white/20">
-                    <div className="absolute top-0 right-0 p-12 opacity-10">
-                      <Zap size={150} strokeWidth={1} />
-                    </div>
-                    <div className="w-16 h-16 bg-primary-600 rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-primary-900/40">
-                      <Lock size={32} strokeWidth={3} />
-                    </div>
-                    <div>
-                      <h4 className="text-4xl font-bold mb-6 leading-tight">{item.title}</h4>
-                      <p className="text-lg font-semibold text-white/70">{item.desc}</p>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex flex-col gap-8">
-                    <div className="h-[450px] rounded-[3rem] overflow-hidden shadow-2xl border-4 border-white/10">
-                      <img src={item.img} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                    </div>
-                    <div className="px-2">
-                      <h4 className="text-2xl font-bold text-white mb-3">{item.title}</h4>
-                      <p className="text-lg font-semibold text-white/70 leading-relaxed">{item.desc}</p>
-                    </div>
-                  </div>
-                )}
-              </motion.div>
-            ))}
+                <ArrowLeft size={24} />
+              </motion.button>
+
+              {/* Indicators */}
+              <div className="flex gap-2 bg-black/30 backdrop-blur-sm rounded-full px-4 py-2">
+                {communityImages.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCommunitySlideIndex(index)}
+                    className={`h-2 rounded-full transition-all duration-300 ${
+                      index === communitySlideIndex ? 'bg-primary-500 w-8' : 'bg-white/50 hover:bg-white/80 w-2'
+                    }`}
+                  />
+                ))}
+              </div>
+
+              {/* Next Button */}
+              <motion.button
+                onClick={nextCommunitySlide}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center text-white hover:bg-white/30 transition-all"
+              >
+                <ChevronRight size={28} />
+              </motion.button>
+            </div>
+          </div>
+
+          {/* Additional Info Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+            <motion.div 
+              whileHover={{ y: -5 }}
+              className="bg-white/5 rounded-2xl p-8 border border-white/10"
+            >
+              <div className="w-12 h-12 bg-primary-600/20 rounded-xl flex items-center justify-center mb-4">
+                <MapPin className="text-primary-400" size={24} />
+              </div>
+              <h4 className="text-xl font-bold text-white mb-2">26 Barangays</h4>
+              <p className="text-white/60 text-sm">Serving the entire municipality with accessible healthcare</p>
+            </motion.div>
+            <motion.div 
+              whileHover={{ y: -5 }}
+              className="bg-white/5 rounded-2xl p-8 border border-white/10"
+            >
+              <div className="w-12 h-12 bg-primary-600/20 rounded-xl flex items-center justify-center mb-4">
+                <Clock className="text-primary-400" size={24} />
+              </div>
+              <h4 className="text-xl font-bold text-white mb-2">Mon - Fri</h4>
+              <p className="text-white/60 text-sm">8:00 AM - 5:00 PM regular operating hours</p>
+            </motion.div>
+            <motion.div 
+              whileHover={{ y: -5 }}
+              className="bg-white/5 rounded-2xl p-8 border border-white/10"
+            >
+              <div className="w-12 h-12 bg-primary-600/20 rounded-xl flex items-center justify-center mb-4">
+                <Shield className="text-primary-400" size={24} />
+              </div>
+              <h4 className="text-xl font-bold text-white mb-2">DOH Accredited</h4>
+              <p className="text-white/60 text-sm">Licensed and certified primary care facility</p>
+            </motion.div>
           </div>
         </div>
       </section>
