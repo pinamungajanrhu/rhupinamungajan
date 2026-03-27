@@ -234,8 +234,6 @@ const Landing = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
             >
-             
-
               <h1 className="text-7xl lg:text-[6.5rem] font-bold text-white leading-[0.9] mb-10 tracking-tighter drop-shadow-lg">
                 Healthier <br />
                 <span className="text-primary-400 relative inline-block">
@@ -251,9 +249,6 @@ const Landing = () => {
                 and consultations. Bringing modern healthcare efficiency to 
                 Pinamungahan's community.
               </p>
-
-              
-            
 
               <div className="flex gap-16 items-center">
                 <div className="flex flex-col gap-1">
@@ -274,11 +269,6 @@ const Landing = () => {
             </motion.div>
           </div>
         </div>
-
-        {/* Floating Badges */}
-       
-
-
       </section>
 
       {/* Community Section - Slideshow with Services Intro */}

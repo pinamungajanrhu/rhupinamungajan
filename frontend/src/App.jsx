@@ -45,7 +45,14 @@ function App() {
           <Route element={<Layout />}>
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="patients" element={<Patients />} />
-            <Route path="register" element={<RegisterPatient />} />
+            <Route 
+              path="register" 
+              element={
+                user.role === 'barangay' 
+                  ? <Navigate to="/barangay-assessment" replace /> 
+                  : <Navigate to="/dashboard" replace />
+              } 
+            />
             <Route path="barangay-assessment" element={<BarangayPCHRATForm />} />
             <Route path="patient/:id" element={<PatientProfile />} />
             <Route path="assessment/:id" element={<Assessment />} />

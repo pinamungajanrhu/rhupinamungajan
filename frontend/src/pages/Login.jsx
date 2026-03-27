@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
-import { Eye, EyeOff, Users, Stethoscope, Building } from 'lucide-react'
+import { Eye, EyeOff, Users, Stethoscope, Building, ArrowLeft } from 'lucide-react'
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +12,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const { login } = useAuth()
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -24,9 +26,9 @@ const Login = () => {
   }
 
   const mockAccounts = [
-    { role: 'barangay', username: 'barangay01', password: 'password123', icon: Building, color: 'blue' },
-    { role: 'rhu', username: 'rhu01', password: 'password123', icon: Users, color: 'green' },
-    { role: 'doctor', username: 'doctor01', password: 'password123', icon: Stethoscope, color: 'purple' }
+    { role: 'barangay', username: 'barangay01', password: 'password123', icon: Building, bgColor: 'bg-blue-100', iconColor: 'text-blue-600' },
+    { role: 'rhu', username: 'rhu01', password: 'password123', icon: Users, bgColor: 'bg-green-100', iconColor: 'text-green-600' },
+    { role: 'doctor', username: 'doctor01', password: 'password123', icon: Stethoscope, bgColor: 'bg-purple-100', iconColor: 'text-purple-600' }
   ]
 
   const fillCredentials = (username, password) => {
@@ -34,14 +36,26 @@ const Login = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-50 flex items-center justify-center p-4 font-sans">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-50 flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md"
+        className="w-full max-w-md relative"
       >
         <div className="bg-white rounded-2xl shadow-xl p-8">
+          {/* Back Button */}
+          <motion.button
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4 }}
+            onClick={() => navigate('/')}
+            className="mb-8 flex items-center gap-2 text-slate-500 hover:text-primary-600 font-bold transition-colors group"
+          >
+            <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
+            <span className="text-sm">Back to Home</span>
+          </motion.button>
+
           {/* Logo and Title */}
           <motion.div
             initial={{ scale: 0.9 }}
@@ -145,8 +159,8 @@ const Login = () => {
                     onClick={() => fillCredentials(account.username, account.password)}
                     className="w-full flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors"
                   >
-                    <div className={`w-8 h-8 bg-${account.color}-100 rounded-lg flex items-center justify-center`}>
-                      <Icon size={16} className={`text-${account.color}-600`} />
+                    <div className={`w-8 h-8 ${account.bgColor} rounded-lg flex items-center justify-center`}>
+                      <Icon size={16} className={account.iconColor} />
                     </div>
                     <div className="flex-1 text-left">
                       <p className="text-sm font-medium text-gray-900 capitalize">

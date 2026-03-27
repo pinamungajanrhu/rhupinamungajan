@@ -28,8 +28,8 @@ router.get('/resident/:residentId', authenticateToken, authorizeRole(['rhu', 'do
   );
 });
 
-// Create or update assessment (RHU Staff only)
-router.post('/', authenticateToken, authorizeRole(['rhu']), (req, res) => {
+// Create or update assessment (RHU Staff and Barangay Encoders)
+router.post('/', authenticateToken, authorizeRole(['rhu', 'barangay']), (req, res) => {
   const assessmentData = req.body;
   assessmentData.created_at = new Date().toISOString();
   assessmentData.updated_at = new Date().toISOString();

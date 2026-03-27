@@ -12,6 +12,7 @@ import {
 } from 'lucide-react'
 import axios from 'axios'
 import toast from 'react-hot-toast'
+import { PINAMUNGAHAN_BARANGAYS } from '../constants'
 
 const RegisterPatient = () => {
   const navigate = useNavigate()
@@ -398,14 +399,17 @@ const AddressStep = ({ formData, onChange }) => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
         <label className="label text-gray-700">Barangay *</label>
-        <input
-          type="text"
+        <select
           value={formData.barangay}
           onChange={(e) => onChange('barangay', e.target.value)}
           className="input"
-          placeholder="Enter barangay"
           required
-        />
+        >
+          <option value="">Select barangay</option>
+          {PINAMUNGAHAN_BARANGAYS.map(brgy => (
+            <option key={brgy} value={brgy}>{brgy}</option>
+          ))}
+        </select>
       </div>
       
       <div>
