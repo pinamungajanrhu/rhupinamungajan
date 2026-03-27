@@ -7,6 +7,8 @@ import {
   HeartPulse, 
   FileText, 
   ArrowRight,
+  ArrowLeft,
+  ChevronRight,
   LogIn,
   UserPlus,
   Home,
@@ -23,7 +25,11 @@ import {
   Award,
   Calendar,
   Zap,
-  Check
+  Check,
+  Baby,
+  Syringe,
+  ClipboardList,
+  Thermometer
 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 
@@ -48,6 +54,15 @@ const Landing = () => {
     }, 5000) // Change every 5 seconds
     return () => clearInterval(interval)
   }, [rhuImages.length])
+
+  // Manual navigation functions
+  const nextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % rhuImages.length)
+  }
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + rhuImages.length) % rhuImages.length)
+  }
 
   const features = [
     {
@@ -177,17 +192,40 @@ const Landing = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/70 to-slate-950/50 z-10"></div>
         </div>
 
-        {/* Image Indicators */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-2 z-20">
-          {rhuImages.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentImageIndex(index)}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                index === currentImageIndex ? 'bg-primary-500 w-8' : 'bg-white/50 hover:bg-white/80'
-              }`}
-            />
-          ))}
+        {/* Image Indicators & Navigation */}
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-4 z-20">
+          {/* Prev Button */}
+          <motion.button
+            onClick={prevImage}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center text-white hover:bg-white/30 transition-all"
+          >
+            <ArrowLeft size={20} />
+          </motion.button>
+
+          {/* Indicators */}
+          <div className="flex gap-2">
+            {rhuImages.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentImageIndex(index)}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  index === currentImageIndex ? 'bg-primary-500 w-8' : 'bg-white/50 hover:bg-white/80 w-2'
+                }`}
+              />
+            ))}
+          </div>
+
+          {/* Next Button */}
+          <motion.button
+            onClick={nextImage}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center text-white hover:bg-white/30 transition-all"
+          >
+            <ChevronRight size={24} />
+          </motion.button>
         </div>
 
         <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full relative z-10">
@@ -242,6 +280,146 @@ const Landing = () => {
        
 
 
+      </section>
+
+      {/* Services Intro Section */}
+      <section id="services" className="relative py-24 bg-white overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-primary-50/50 to-transparent"></div>
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+          {/* Section Header */}
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-100 border border-primary-200 mb-6"
+            >
+              <Stethoscope size={16} className="text-primary-600" />
+              <span className="text-xs font-bold uppercase tracking-wider text-primary-700">Our Services</span>
+            </motion.div>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-4xl lg:text-5xl font-bold text-slate-900 mb-6 tracking-tight"
+            >
+              Comprehensive Primary Care <br />
+              <span className="text-primary-600">for the Whole Community</span>
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="text-lg text-slate-600 leading-relaxed"
+            >
+              Pinamungajan RHU offers a wide range of health services designed to meet the needs 
+              of every resident, from maternal care to chronic disease management.
+            </motion.p>
+          </div>
+
+          {/* Services Grid */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                icon: Baby,
+                title: 'Maternal & Child Health',
+                description: 'Prenatal care, safe delivery services, postpartum care, and child immunization programs.',
+                color: 'bg-pink-500',
+                bgColor: 'bg-pink-50'
+              },
+              {
+                icon: HeartPulse,
+                title: 'Family Planning',
+                description: 'Counseling and access to various contraceptive methods for responsible parenthood.',
+                color: 'bg-rose-500',
+                bgColor: 'bg-rose-50'
+              },
+              {
+                icon: ClipboardList,
+                title: 'Health Risk Assessment',
+                description: 'PCHRAT screening for early detection of diabetes, hypertension, and other chronic diseases.',
+                color: 'bg-emerald-500',
+                bgColor: 'bg-emerald-50'
+              },
+              {
+                icon: Syringe,
+                title: 'Immunization',
+                description: 'Routine vaccinations for infants, children, and adults including COVID-19 boosters.',
+                color: 'bg-blue-500',
+                bgColor: 'bg-blue-50'
+              },
+              {
+                icon: Thermometer,
+                title: 'TB & Disease Control',
+                description: 'Screening, treatment, and monitoring for tuberculosis and other communicable diseases.',
+                color: 'bg-amber-500',
+                bgColor: 'bg-amber-50'
+              },
+              {
+                icon: Activity,
+                title: 'Hypertension & Diabetes',
+                description: 'Regular monitoring, medication dispensing, and lifestyle counseling for NCD patients.',
+                color: 'bg-purple-500',
+                bgColor: 'bg-purple-50'
+              },
+              {
+                icon: Users,
+                title: 'Senior Citizen Care',
+                description: 'Comprehensive health check-ups and maintenance for elderly residents.',
+                color: 'bg-indigo-500',
+                bgColor: 'bg-indigo-50'
+              },
+              {
+                icon: Shield,
+                title: 'Dental & Nutrition',
+                description: 'Oral health services and nutritional counseling for families.',
+                color: 'bg-teal-500',
+                bgColor: 'bg-teal-50'
+              }
+            ].map((service, index) => (
+              <motion.div
+                key={service.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={{ y: -8, transition: { duration: 0.2 } }}
+                className="group bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300"
+              >
+                <div className={`w-14 h-14 ${service.bgColor} rounded-xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300`}>
+                  <service.icon className={`w-7 h-7 ${service.color.replace('bg-', 'text-')}`} />
+                </div>
+                <h3 className="text-lg font-bold text-slate-900 mb-3 group-hover:text-primary-600 transition-colors">
+                  {service.title}
+                </h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  {service.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* CTA */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-16 text-center"
+          >
+            <p className="text-slate-500 mb-4">Need medical assistance? Visit our facility or login to access digital services.</p>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleLogin}
+              className="inline-flex items-center gap-2 px-8 py-4 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 transition-colors shadow-lg shadow-primary-200"
+            >
+              Access Health Portal
+              <ArrowRight size={20} />
+            </motion.button>
+          </motion.div>
+        </div>
       </section>
 
       {/* Community Section - Dark Theme (No Background Image) */}
