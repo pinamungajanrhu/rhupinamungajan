@@ -528,13 +528,6 @@ const Landing = () => {
                 </li>
               </ul>
 
-              {/* Updated as of 2026 - Badge Style */}
-              <div className="my-3 flex items-center gap-3">
-                <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary-500/30 to-transparent"></div>
-                <span className="px-3 py-1 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-xs font-semibold">Updated as of 2026</span>
-                <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary-500/30 to-transparent"></div>
-              </div>
-
               {/* Second Section */}
               <ul className="space-y-1">
                 {[
