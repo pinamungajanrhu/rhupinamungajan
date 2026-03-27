@@ -154,7 +154,7 @@ const Landing = () => {
             
             <div className="hidden md:flex items-center gap-12">
               <a href="#features" className="text-sm font-bold text-slate-500 hover:text-primary-600 transition-all relative group">
-                Features
+                Service List
                 <span className="absolute -bottom-1.5 left-0 w-0 h-0.5 bg-primary-600 transition-all group-hover:w-full rounded-full"></span>
               </a>
               <a href="#community" className="text-sm font-bold text-slate-500 hover:text-primary-600 transition-all relative group">
@@ -422,8 +422,7 @@ const Landing = () => {
             <h2 className="text-[11px] font-bold text-primary-400 uppercase tracking-[0.3em] mb-6">Our Facility</h2>
             <h3 className="text-5xl lg:text-7xl font-bold text-white mb-10 tracking-tighter leading-none">Medical & Laboratory <br /> Services.</h3>
             <p className="text-xl text-white/70 font-semibold leading-relaxed">
-              Comprehensive healthcare services available at Pinamungajan RHU. 
-              Updated as of 2026.
+              Comprehensive healthcare services available at Pinamungajan RHU.
             </p>
           </div>
 
@@ -434,13 +433,19 @@ const Landing = () => {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="bg-slate-950 rounded-[2.5rem] p-10 border border-white/10"
+              className="relative bg-gradient-to-br from-slate-900 to-slate-950 rounded-[2.5rem] p-10 border border-white/10 overflow-hidden"
             >
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-14 h-14 bg-primary-600/20 rounded-2xl flex items-center justify-center">
+              {/* Background glow */}
+              <div className="absolute top-0 right-0 w-64 h-64 bg-primary-500/5 rounded-full blur-3xl"></div>
+              
+              <div className="relative flex items-center gap-4 mb-8">
+                <div className="w-14 h-14 bg-gradient-to-br from-primary-500/20 to-primary-600/10 rounded-2xl flex items-center justify-center border border-primary-500/20">
                   <Stethoscope size={28} className="text-primary-400" />
                 </div>
-                <h4 className="text-2xl font-bold text-white">Medical Services</h4>
+                <div>
+                  <h4 className="text-2xl font-bold text-white">Medical Services</h4>
+                  <span className="text-[10px] text-primary-400 uppercase tracking-wider font-semibold">Primary Care</span>
+                </div>
               </div>
               
               {/* First Section */}
@@ -457,15 +462,23 @@ const Landing = () => {
                   'Hygiene Examination',
                   'Drug Dependency Examination'
                 ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 text-white/70 text-sm">
-                    <span className="text-primary-500">-</span>
-                    <span>{item}</span>
-                  </li>
+                  <motion.li 
+                    key={i} 
+                    whileHover={{ x: 4 }}
+                    className="flex items-start gap-3 text-white/70 text-sm group cursor-default"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary-500/50 mt-2 group-hover:bg-primary-400 transition-colors"></span>
+                    <span className="group-hover:text-white/90 transition-colors">{item}</span>
+                  </motion.li>
                 ))}
               </ul>
 
-              {/* Updated as of 2026 */}
-              <p className="text-primary-400 text-sm font-medium my-4">Updated as of 2026</p>
+              {/* Updated as of 2026 - Badge Style */}
+              <div className="my-5 flex items-center gap-3">
+                <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary-500/30 to-transparent"></div>
+                <span className="px-3 py-1 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-xs font-semibold">Updated as of 2026</span>
+                <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary-500/30 to-transparent"></div>
+              </div>
 
               {/* Second Section */}
               <ul className="space-y-2">
@@ -479,25 +492,29 @@ const Landing = () => {
                   'Fee for Exhumation/Removal of Cadaver',
                   'Animal Bite Treatment Center (ABTC) Fee'
                 ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 text-white/70 text-sm">
-                    <span className="text-primary-500">-</span>
-                    <span>{item}</span>
-                  </li>
+                  <motion.li 
+                    key={i} 
+                    whileHover={{ x: 4 }}
+                    className="flex items-start gap-3 text-white/70 text-sm group cursor-default"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary-500/50 mt-2 group-hover:bg-primary-400 transition-colors"></span>
+                    <span className="group-hover:text-white/90 transition-colors">{item}</span>
+                  </motion.li>
                 ))}
-                <li className="flex items-start gap-3 text-white/70 text-sm">
-                  <span className="text-primary-500">-</span>
-                  <span>Pre-marriage Counseling Fee:</span>
+                <li className="flex items-start gap-3 text-white/70 text-sm mt-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary-500/50 mt-2"></span>
+                  <span className="font-medium text-white/80">Pre-marriage Counseling Fee:</span>
                 </li>
-                <li className="flex items-start gap-3 text-white/60 text-sm ml-6">
-                  <span className="text-primary-500/50">•</span>
+                <li className="flex items-start gap-3 text-white/50 text-sm ml-5">
+                  <span className="text-primary-500/40 text-xs">◦</span>
                   <span>Residents</span>
                 </li>
-                <li className="flex items-start gap-3 text-white/60 text-sm ml-6">
-                  <span className="text-primary-500/50">•</span>
+                <li className="flex items-start gap-3 text-white/50 text-sm ml-5">
+                  <span className="text-primary-500/40 text-xs">◦</span>
                   <span>Non-residents</span>
                 </li>
-                <li className="flex items-start gap-3 text-white/60 text-sm ml-6">
-                  <span className="text-primary-500/50">•</span>
+                <li className="flex items-start gap-3 text-white/50 text-sm ml-5">
+                  <span className="text-primary-500/40 text-xs">◦</span>
                   <span>Foreigner/Special</span>
                 </li>
               </ul>
@@ -509,179 +526,126 @@ const Landing = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="bg-slate-950 rounded-[2.5rem] p-10 border border-white/10"
+              className="relative bg-gradient-to-br from-slate-900 to-slate-950 rounded-[2.5rem] p-10 border border-white/10 overflow-hidden"
             >
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-14 h-14 bg-rose-600/20 rounded-2xl flex items-center justify-center">
+              {/* Background glow */}
+              <div className="absolute top-0 right-0 w-64 h-64 bg-rose-500/5 rounded-full blur-3xl"></div>
+              
+              <div className="relative flex items-center gap-4 mb-6">
+                <div className="w-14 h-14 bg-gradient-to-br from-rose-500/20 to-rose-600/10 rounded-2xl flex items-center justify-center border border-rose-500/20">
                   <Activity size={28} className="text-rose-400" />
                 </div>
-                <h4 className="text-2xl font-bold text-white">Laboratory Services</h4>
+                <div>
+                  <h4 className="text-2xl font-bold text-white">Laboratory Services</h4>
+                  <span className="text-[10px] text-rose-400 uppercase tracking-wider font-semibold">Diagnostics</span>
+                </div>
               </div>
               
               {/* Hematology */}
               <div className="mb-4">
-                <h5 className="text-rose-400 font-semibold mb-2 text-sm">Hematology</h5>
-                <ul className="space-y-1">
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">a.</span>
-                    <span>Complete Blood Count (CBC)</span>
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-1 h-4 bg-rose-500/50 rounded-full"></div>
+                  <h5 className="text-rose-300 font-semibold text-sm">Hematology</h5>
+                </div>
+                <ul className="space-y-1.5 ml-3">
+                  <li className="flex items-start gap-2 text-white/70 text-sm group">
+                    <span className="text-rose-500/40 text-xs font-mono mt-0.5">a.</span>
+                    <span className="group-hover:text-white/90 transition-colors">Complete Blood Count (CBC)</span>
                   </li>
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">b.</span>
-                    <span>Blood Typing</span>
+                  <li className="flex items-start gap-2 text-white/70 text-sm group">
+                    <span className="text-rose-500/40 text-xs font-mono mt-0.5">b.</span>
+                    <span className="group-hover:text-white/90 transition-colors">Blood Typing</span>
                   </li>
                 </ul>
               </div>
 
               {/* Blood Chemistry Tests */}
               <div className="mb-4">
-                <h5 className="text-rose-400 font-semibold mb-2 text-sm">Blood Chemistry Tests</h5>
-                <ul className="space-y-1">
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">a.</span>
-                    <span>75 grams OGTT</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">b.</span>
-                    <span>ALT/SGPT</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">c.</span>
-                    <span>AST/SGOT</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">d.</span>
-                    <span>Blood Urea Nitrogen (BUN)</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">e.</span>
-                    <span>Blood Uric Acid (BUA)</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">f.</span>
-                    <span>Calcium</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">g.</span>
-                    <span>Chloride</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">h.</span>
-                    <span>Creatinine</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">i.</span>
-                    <span>Fasting Blood Sugar</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">j.</span>
-                    <span>Lipid Panel</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">k.</span>
-                    <span>Potassium</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">l.</span>
-                    <span>Random Blood Sugar</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">m.</span>
-                    <span>Sodium</span>
-                  </li>
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-1 h-4 bg-rose-500/50 rounded-full"></div>
+                  <h5 className="text-rose-300 font-semibold text-sm">Blood Chemistry Tests</h5>
+                </div>
+                <ul className="space-y-1.5 ml-3">
+                  {[
+                    { letter: 'a', text: '75 grams OGTT' },
+                    { letter: 'b', text: 'ALT/SGPT' },
+                    { letter: 'c', text: 'AST/SGOT' },
+                    { letter: 'd', text: 'Blood Urea Nitrogen (BUN)' },
+                    { letter: 'e', text: 'Blood Uric Acid (BUA)' },
+                    { letter: 'f', text: 'Calcium' },
+                    { letter: 'g', text: 'Chloride' },
+                    { letter: 'h', text: 'Creatinine' },
+                    { letter: 'i', text: 'Fasting Blood Sugar' },
+                    { letter: 'j', text: 'Lipid Panel' },
+                    { letter: 'k', text: 'Potassium' },
+                    { letter: 'l', text: 'Random Blood Sugar' },
+                    { letter: 'm', text: 'Sodium' }
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-start gap-2 text-white/70 text-sm group">
+                      <span className="text-rose-500/40 text-xs font-mono mt-0.5 w-4">{item.letter}.</span>
+                      <span className="group-hover:text-white/90 transition-colors">{item.text}</span>
+                    </li>
+                  ))}
                 </ul>
               </div>
 
-              {/* Updated As of 2026 */}
-              <p className="text-rose-400 text-sm font-medium my-4">Updated As of 2026</p>
+              {/* Updated As of 2026 - Badge Style */}
+              <div className="my-5 flex items-center gap-3">
+                <div className="h-px flex-1 bg-gradient-to-r from-transparent via-rose-500/30 to-transparent"></div>
+                <span className="px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-semibold">Updated As of 2026</span>
+                <div className="h-px flex-1 bg-gradient-to-r from-transparent via-rose-500/30 to-transparent"></div>
+              </div>
 
               {/* Clinical Microscopy Test */}
               <div className="mb-4">
-                <h5 className="text-rose-400 font-semibold mb-2 text-sm">Clinical Microscopy Test:</h5>
-                <ul className="space-y-1">
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">a.</span>
-                    <span>Sputum Examination</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">b.</span>
-                    <span>Stool Examination</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">c.</span>
-                    <span>Fecal Occult Blood Test (FORT)</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">d.</span>
-                    <span>Urinalysis</span>
-                  </li>
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-1 h-4 bg-rose-500/50 rounded-full"></div>
+                  <h5 className="text-rose-300 font-semibold text-sm">Clinical Microscopy Test</h5>
+                </div>
+                <ul className="space-y-1.5 ml-3">
+                  {[
+                    { letter: 'a', text: 'Sputum Examination' },
+                    { letter: 'b', text: 'Stool Examination' },
+                    { letter: 'c', text: 'Fecal Occult Blood Test (FORT)' },
+                    { letter: 'd', text: 'Urinalysis' }
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-start gap-2 text-white/70 text-sm group">
+                      <span className="text-rose-500/40 text-xs font-mono mt-0.5 w-4">{item.letter}.</span>
+                      <span className="group-hover:text-white/90 transition-colors">{item.text}</span>
+                    </li>
+                  ))}
                 </ul>
               </div>
 
               {/* Immunologic Test */}
               <div>
-                <h5 className="text-rose-400 font-semibold mb-2 text-sm">Immunologic Test:</h5>
-                <ul className="space-y-1">
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">a.</span>
-                    <span>Anti-HAV</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">b.</span>
-                    <span>COVID-19 Rapid Antigen Test</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">c.</span>
-                    <span>Dengue Duo</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">d.</span>
-                    <span>Dengue IgG/IgM</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">e.</span>
-                    <span>Dengue NS1</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">f.</span>
-                    <span>Free T3 (FT3)</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">g.</span>
-                    <span>Free T4 (FT4)</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">h.</span>
-                    <span>HbA1c</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">i.</span>
-                    <span>Hepatitis B Surface Antigen (HbsAg)</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">j.</span>
-                    <span>HIV Testing fee (for prenatal care and employment purposes only)</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">k.</span>
-                    <span>Pregnancy Test (PT)</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">l.</span>
-                    <span>Prostate-Specific Antigen (PSA)</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">m.</span>
-                    <span>Syphilis (VDRL)</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">n.</span>
-                    <span>Thyroid Stimulating Hormone (TSH)</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-white/70 text-sm">
-                    <span className="text-rose-500/70 text-xs">o.</span>
-                    <span>Typhi DOT IgG/IgM</span>
-                  </li>
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-1 h-4 bg-rose-500/50 rounded-full"></div>
+                  <h5 className="text-rose-300 font-semibold text-sm">Immunologic Test</h5>
+                </div>
+                <ul className="space-y-1.5 ml-3">
+                  {[
+                    { letter: 'a', text: 'Anti-HAV' },
+                    { letter: 'b', text: 'COVID-19 Rapid Antigen Test' },
+                    { letter: 'c', text: 'Dengue Duo' },
+                    { letter: 'd', text: 'Dengue IgG/IgM' },
+                    { letter: 'e', text: 'Dengue NS1' },
+                    { letter: 'f', text: 'Free T3 (FT3)' },
+                    { letter: 'g', text: 'Free T4 (FT4)' },
+                    { letter: 'h', text: 'HbA1c' },
+                    { letter: 'i', text: 'Hepatitis B Surface Antigen (HbsAg)' },
+                    { letter: 'j', text: 'HIV Testing fee (for prenatal care and employment purposes only)' },
+                    { letter: 'k', text: 'Pregnancy Test (PT)' },
+                    { letter: 'l', text: 'Prostate-Specific Antigen (PSA)' },
+                    { letter: 'm', text: 'Syphilis (VDRL)' },
+                    { letter: 'n', text: 'Thyroid Stimulating Hormone (TSH)' },
+                    { letter: 'o', text: 'Typhi DOT IgG/IgM' }
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-start gap-2 text-white/70 text-sm group">
+                      <span className="text-rose-500/40 text-xs font-mono mt-0.5 w-4">{item.letter}.</span>
+                      <span className="group-hover:text-white/90 transition-colors">{item.text}</span>
+                    </li>
+                  ))}
                 </ul>
               </div>
             </motion.div>
