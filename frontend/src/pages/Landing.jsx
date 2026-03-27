@@ -429,34 +429,185 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* Features Grid - Dark Theme */}
+      {/* Services Section - Facility Services */}
       <section id="features" className="py-32 bg-slate-900 border-y border-slate-800">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-24">
-            <h2 className="text-[11px] font-bold text-primary-400 uppercase tracking-[0.3em] mb-6">Core Capabilities</h2>
-            <h3 className="text-5xl lg:text-7xl font-bold text-white mb-10 tracking-tighter leading-none">Modern Health <br /> Ecosystem.</h3>
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-[11px] font-bold text-primary-400 uppercase tracking-[0.3em] mb-6">Our Facility</h2>
+            <h3 className="text-5xl lg:text-7xl font-bold text-white mb-10 tracking-tighter leading-none">Medical & Laboratory <br /> Services.</h3>
             <p className="text-xl text-white/70 font-semibold leading-relaxed">
-              Every feature is meticulously designed to optimize the healthcare 
-              journey for both staff and residents.
+              Comprehensive healthcare services available at Pinamungajan RHU. 
+              Updated as of 2026.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, i) => (
-              <motion.div
-                key={i}
-                whileHover={{ scale: 1.02, y: -5 }}
-                className="p-10 rounded-[2.5rem] bg-white/5 border border-white/10 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.3)] hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.4)] hover:bg-white/10 transition-all duration-500"
-              >
-                <div className={`w-16 h-16 ${feature.color} bg-opacity-20 rounded-2xl flex items-center justify-center mb-10 shadow-sm`}>
-                  <feature.icon size={32} strokeWidth={2.5} className="text-white" />
+          {/* Services Grid */}
+          <div className="grid lg:grid-cols-2 gap-8">
+            {/* Medical Services */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="bg-slate-950 rounded-[2.5rem] p-10 border border-white/10"
+            >
+              <div className="flex items-center gap-4 mb-8">
+                <div className="w-14 h-14 bg-primary-600/20 rounded-2xl flex items-center justify-center">
+                  <Stethoscope size={28} className="text-primary-400" />
                 </div>
-                <h4 className="text-2xl font-bold text-white mb-6 leading-tight">{feature.title}</h4>
-                <p className="text-white/70 font-semibold text-base leading-relaxed">
-                  {feature.description}
-                </p>
-              </motion.div>
-            ))}
+                <h4 className="text-2xl font-bold text-white">Medical Services</h4>
+              </div>
+              <ul className="space-y-3">
+                {[
+                  'Medical Certificate',
+                  'Health Certificate',
+                  'Medico Legal Fees',
+                  'COVID Vaccination Certificate',
+                  'Quarantine/Isolation Certificate',
+                  'Vaccine Certificate',
+                  'Cardiopulmonary Clearance Certificate',
+                  'Birthing Center Fee',
+                  'Hygiene Examination',
+                  'Drug Dependency Examination',
+                  'Pre-marriage Counseling (Residents, Non-residents, Foreigner/Special)'
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-3 text-white/70 text-sm">
+                    <Check size={16} className="text-primary-500 mt-0.5 shrink-0" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+
+            {/* Dental Services */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="bg-slate-950 rounded-[2.5rem] p-10 border border-white/10"
+            >
+              <div className="flex items-center gap-4 mb-8">
+                <div className="w-14 h-14 bg-teal-600/20 rounded-2xl flex items-center justify-center">
+                  <Database size={28} className="text-teal-400" />
+                </div>
+                <h4 className="text-2xl font-bold text-white">Dental Services <span className="text-sm font-normal text-white/50">(Updated 2026)</span></h4>
+              </div>
+              <ul className="space-y-3">
+                {[
+                  'Tooth Extraction',
+                  'Tooth Filing',
+                  'Cleaning/Oral Prophylaxis',
+                  'Dental Certificate',
+                  'Burial Permit Fees',
+                  'Transfer of Cadaver',
+                  'Fee for Exhumation/Removal of Cadaver',
+                  'Animal Bite Treatment Center (ABTC) Fee'
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-3 text-white/70 text-sm">
+                    <Check size={16} className="text-teal-500 mt-0.5 shrink-0" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+
+            {/* Laboratory - Hematology & Blood Chemistry */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="bg-slate-950 rounded-[2.5rem] p-10 border border-white/10"
+            >
+              <div className="flex items-center gap-4 mb-8">
+                <div className="w-14 h-14 bg-rose-600/20 rounded-2xl flex items-center justify-center">
+                  <Activity size={28} className="text-rose-400" />
+                </div>
+                <h4 className="text-2xl font-bold text-white">Laboratory Services</h4>
+              </div>
+              
+              <div className="mb-6">
+                <h5 className="text-primary-400 font-semibold mb-3 text-sm uppercase tracking-wider">Hematology</h5>
+                <ul className="space-y-2 mb-4">
+                  <li className="flex items-start gap-3 text-white/70 text-sm">
+                    <Check size={16} className="text-rose-500 mt-0.5 shrink-0" />
+                    <span>Complete Blood Count (CBC)</span>
+                  </li>
+                  <li className="flex items-start gap-3 text-white/70 text-sm">
+                    <Check size={16} className="text-rose-500 mt-0.5 shrink-0" />
+                    <span>Blood Typing</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div>
+                <h5 className="text-primary-400 font-semibold mb-3 text-sm uppercase tracking-wider">Blood Chemistry Tests</h5>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                  {[
+                    '75 grams OGTT', 'ALT/SGPT', 'AST/SGOT', 'BUN', 'BUA',
+                    'Calcium', 'Chloride', 'Creatinine', 'Fasting Blood Sugar',
+                    'Lipid Panel', 'Potassium', 'Random Blood Sugar', 'Sodium'
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-start gap-2 text-white/70 text-xs">
+                      <Check size={12} className="text-rose-500 mt-0.5 shrink-0" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Laboratory - Clinical Microscopy & Immunologic */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+              className="bg-slate-950 rounded-[2.5rem] p-10 border border-white/10"
+            >
+              <div className="flex items-center gap-4 mb-8">
+                <div className="w-14 h-14 bg-amber-600/20 rounded-2xl flex items-center justify-center">
+                  <Shield size={28} className="text-amber-400" />
+                </div>
+                <h4 className="text-2xl font-bold text-white">Diagnostics <span className="text-sm font-normal text-white/50">(Updated 2026)</span></h4>
+              </div>
+              
+              <div className="mb-6">
+                <h5 className="text-primary-400 font-semibold mb-3 text-sm uppercase tracking-wider">Clinical Microscopy</h5>
+                <ul className="space-y-2 mb-4">
+                  {[
+                    'Sputum Examination',
+                    'Stool Examination',
+                    'Fecal Occult Blood Test (FORT)',
+                    'Urinalysis'
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-start gap-3 text-white/70 text-sm">
+                      <Check size={16} className="text-amber-500 mt-0.5 shrink-0" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div>
+                <h5 className="text-primary-400 font-semibold mb-3 text-sm uppercase tracking-wider">Immunologic Tests</h5>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+                  {[
+                    'Anti-HAV', 'COVID-19 Rapid Antigen', 'Dengue Duo',
+                    'Dengue IgG/IgM', 'Dengue NS1', 'Free T3 (FT3)',
+                    'Free T4 (FT4)', 'HbA1c', 'Hepatitis B (HbsAg)',
+                    'HIV Testing*', 'Pregnancy Test (PT)', 'PSA',
+                    'Syphilis (VDRL)', 'TSH', 'Typhi DOT IgG/IgM'
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-start gap-2 text-white/70 text-xs">
+                      <Check size={12} className="text-amber-500 mt-0.5 shrink-0" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </div>
+                <p className="text-white/40 text-xs mt-3 italic">*For prenatal care and employment purposes only</p>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
