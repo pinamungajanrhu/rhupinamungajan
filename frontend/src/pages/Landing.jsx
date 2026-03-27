@@ -442,19 +442,34 @@ const Landing = () => {
                 </div>
                 <h4 className="text-2xl font-bold text-white">Medical Services</h4>
               </div>
+              
+              {/* First Section */}
               <ul className="space-y-2">
                 {[
                   'Medical Certificate',
                   'Health Certificate',
-                  'Medico Legal Fees',
+                  'Medico legal fees',
                   'COVID Vaccination Certificate',
                   'Quarantine/Isolation Certificate',
                   'Vaccine Certificate',
                   'Cardiopulmonary Clearance Certificate',
                   'Birthing Center Fee',
                   'Hygiene Examination',
-                  'Drug Dependency Examination',
-                  'Pre-marriage Counseling (Residents, Non-residents, Foreigner/Special)',
+                  'Drug Dependency Examination'
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-3 text-white/70 text-sm">
+                    <span className="text-primary-500">-</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+
+              {/* Updated as of 2026 */}
+              <p className="text-primary-400 text-sm font-medium my-4">Updated as of 2026</p>
+
+              {/* Second Section */}
+              <ul className="space-y-2">
+                {[
                   'Tooth Extraction',
                   'Tooth Filing',
                   'Cleaning/Oral Prophylaxis',
@@ -465,17 +480,30 @@ const Landing = () => {
                   'Animal Bite Treatment Center (ABTC) Fee'
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-3 text-white/70 text-sm">
-                    <Check size={16} className="text-primary-500 mt-0.5 shrink-0" />
+                    <span className="text-primary-500">-</span>
                     <span>{item}</span>
                   </li>
                 ))}
-                <li className="flex items-start gap-3 text-primary-400 text-sm font-medium italic mt-2">
-                  <span className="ml-7">and more...</span>
+                <li className="flex items-start gap-3 text-white/70 text-sm">
+                  <span className="text-primary-500">-</span>
+                  <span>Pre-marriage Counseling Fee:</span>
+                </li>
+                <li className="flex items-start gap-3 text-white/60 text-sm ml-6">
+                  <span className="text-primary-500/50">•</span>
+                  <span>Residents</span>
+                </li>
+                <li className="flex items-start gap-3 text-white/60 text-sm ml-6">
+                  <span className="text-primary-500/50">•</span>
+                  <span>Non-residents</span>
+                </li>
+                <li className="flex items-start gap-3 text-white/60 text-sm ml-6">
+                  <span className="text-primary-500/50">•</span>
+                  <span>Foreigner/Special</span>
                 </li>
               </ul>
             </motion.div>
 
-            {/* Laboratory Services - Updated as of 2026 */}
+            {/* Laboratory Services */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -487,77 +515,174 @@ const Landing = () => {
                 <div className="w-14 h-14 bg-rose-600/20 rounded-2xl flex items-center justify-center">
                   <Activity size={28} className="text-rose-400" />
                 </div>
-                <div>
-                  <h4 className="text-2xl font-bold text-white">Laboratory Services</h4>
-                  <p className="text-rose-400 text-sm font-medium">Updated as of 2026</p>
-                </div>
+                <h4 className="text-2xl font-bold text-white">Laboratory Services</h4>
               </div>
               
               {/* Hematology */}
               <div className="mb-4">
-                <h5 className="text-primary-400 font-semibold mb-2 text-xs uppercase tracking-wider">Hematology</h5>
-                <div className="flex flex-wrap gap-x-4 gap-y-1">
-                  {['Complete Blood Count (CBC)', 'Blood Typing'].map((item, i) => (
-                    <li key={i} className="flex items-center gap-2 text-white/70 text-sm list-none">
-                      <Check size={14} className="text-rose-500 shrink-0" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </div>
+                <h5 className="text-rose-400 font-semibold mb-2 text-sm">Hematology</h5>
+                <ul className="space-y-1">
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">a.</span>
+                    <span>Complete Blood Count (CBC)</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">b.</span>
+                    <span>Blood Typing</span>
+                  </li>
+                </ul>
               </div>
 
-              {/* Blood Chemistry */}
+              {/* Blood Chemistry Tests */}
               <div className="mb-4">
-                <h5 className="text-primary-400 font-semibold mb-2 text-xs uppercase tracking-wider">Blood Chemistry Tests</h5>
-                <div className="grid grid-cols-2 gap-x-4 gap-y-1">
-                  {[
-                    '75 grams OGTT', 'ALT/SGPT', 'AST/SGOT', 'Blood Urea Nitrogen (BUN)',
-                    'Blood Uric Acid (BUA)', 'Calcium', 'Chloride', 'Creatinine',
-                    'Fasting Blood Sugar', 'Lipid Panel', 'Potassium', 'Random Blood Sugar', 'Sodium'
-                  ].map((item, i) => (
-                    <li key={i} className="flex items-start gap-2 text-white/70 text-xs list-none">
-                      <Check size={12} className="text-rose-500 mt-0.5 shrink-0" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </div>
+                <h5 className="text-rose-400 font-semibold mb-2 text-sm">Blood Chemistry Tests</h5>
+                <ul className="space-y-1">
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">a.</span>
+                    <span>75 grams OGTT</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">b.</span>
+                    <span>ALT/SGPT</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">c.</span>
+                    <span>AST/SGOT</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">d.</span>
+                    <span>Blood Urea Nitrogen (BUN)</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">e.</span>
+                    <span>Blood Uric Acid (BUA)</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">f.</span>
+                    <span>Calcium</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">g.</span>
+                    <span>Chloride</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">h.</span>
+                    <span>Creatinine</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">i.</span>
+                    <span>Fasting Blood Sugar</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">j.</span>
+                    <span>Lipid Panel</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">k.</span>
+                    <span>Potassium</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">l.</span>
+                    <span>Random Blood Sugar</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">m.</span>
+                    <span>Sodium</span>
+                  </li>
+                </ul>
               </div>
 
-              {/* Clinical Microscopy */}
+              {/* Updated As of 2026 */}
+              <p className="text-rose-400 text-sm font-medium my-4">Updated As of 2026</p>
+
+              {/* Clinical Microscopy Test */}
               <div className="mb-4">
-                <h5 className="text-primary-400 font-semibold mb-2 text-xs uppercase tracking-wider">Clinical Microscopy Tests</h5>
-                <div className="flex flex-wrap gap-x-4 gap-y-1">
-                  {[
-                    'Sputum Examination', 'Stool Examination',
-                    'Fecal Occult Blood Test (FORT)', 'Urinalysis'
-                  ].map((item, i) => (
-                    <li key={i} className="flex items-center gap-2 text-white/70 text-sm list-none">
-                      <Check size={14} className="text-rose-500 shrink-0" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </div>
+                <h5 className="text-rose-400 font-semibold mb-2 text-sm">Clinical Microscopy Test:</h5>
+                <ul className="space-y-1">
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">a.</span>
+                    <span>Sputum Examination</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">b.</span>
+                    <span>Stool Examination</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">c.</span>
+                    <span>Fecal Occult Blood Test (FORT)</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">d.</span>
+                    <span>Urinalysis</span>
+                  </li>
+                </ul>
               </div>
 
-              {/* Immunologic Tests */}
+              {/* Immunologic Test */}
               <div>
-                <h5 className="text-primary-400 font-semibold mb-2 text-xs uppercase tracking-wider">Immunologic Tests</h5>
-                <div className="grid grid-cols-2 gap-x-4 gap-y-1">
-                  {[
-                    'Anti-HAV', 'COVID-19 Rapid Antigen Test', 'Dengue Duo',
-                    'Dengue IgG/IgM', 'Dengue NS1', 'Free T3 (FT3)',
-                    'Free T4 (FT4)', 'HbA1c', 'Hepatitis B Surface Antigen (HbsAg)',
-                    'HIV Testing fee*', 'Pregnancy Test (PT)', 'Prostate-Specific Antigen (PSA)',
-                    'Syphilis (VDRL)', 'Thyroid Stimulating Hormone (TSH)', 'Typhi DOT IgG/IgM'
-                  ].map((item, i) => (
-                    <li key={i} className="flex items-start gap-2 text-white/70 text-xs list-none">
-                      <Check size={12} className="text-rose-500 mt-0.5 shrink-0" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </div>
-                <p className="text-rose-400 text-xs mt-2 font-medium italic">and more...</p>
-                <p className="text-white/40 text-xs mt-1 italic">*For prenatal care and employment purposes only</p>
+                <h5 className="text-rose-400 font-semibold mb-2 text-sm">Immunologic Test:</h5>
+                <ul className="space-y-1">
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">a.</span>
+                    <span>Anti-HAV</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">b.</span>
+                    <span>COVID-19 Rapid Antigen Test</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">c.</span>
+                    <span>Dengue Duo</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">d.</span>
+                    <span>Dengue IgG/IgM</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">e.</span>
+                    <span>Dengue NS1</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">f.</span>
+                    <span>Free T3 (FT3)</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">g.</span>
+                    <span>Free T4 (FT4)</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">h.</span>
+                    <span>HbA1c</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">i.</span>
+                    <span>Hepatitis B Surface Antigen (HbsAg)</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">j.</span>
+                    <span>HIV Testing fee (for prenatal care and employment purposes only)</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">k.</span>
+                    <span>Pregnancy Test (PT)</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">l.</span>
+                    <span>Prostate-Specific Antigen (PSA)</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">m.</span>
+                    <span>Syphilis (VDRL)</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">n.</span>
+                    <span>Thyroid Stimulating Hormone (TSH)</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">o.</span>
+                    <span>Typhi DOT IgG/IgM</span>
+                  </li>
+                </ul>
               </div>
             </motion.div>
           </div>
