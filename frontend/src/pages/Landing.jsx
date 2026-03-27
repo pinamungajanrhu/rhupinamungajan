@@ -527,45 +527,6 @@ const Landing = () => {
                   <span>Foreigner/Special</span>
                 </li>
               </ul>
-
-              {/* Second Section */}
-              <ul className="space-y-1">
-                {[
-                  'Tooth Extraction',
-                  'Tooth Filing',
-                  'Cleaning/Oral Prophylaxis',
-                  'Dental Certificate',
-                  'Burial Permit Fees',
-                  'Transfer of Cadaver',
-                  'Fee for Exhumation/Removal of Cadaver',
-                  'Animal Bite Treatment Center (ABTC) Fee'
-                ].map((item, i) => (
-                  <motion.li 
-                    key={i} 
-                    whileHover={{ x: 4 }}
-                    className="flex items-center gap-2 text-white/70 text-xs group cursor-default"
-                  >
-                    <span className="w-1 h-1 rounded-full bg-primary-500/50 group-hover:bg-primary-400 transition-colors"></span>
-                    <span className="group-hover:text-white/90 transition-colors">{item}</span>
-                  </motion.li>
-                ))}
-                <li className="flex items-center gap-2 text-white/70 text-xs mt-2">
-                  <span className="w-1 h-1 rounded-full bg-primary-500/50"></span>
-                  <span className="font-medium text-white/80">Pre-marriage Counseling Fee:</span>
-                </li>
-                <li className="flex items-center gap-2 text-white/50 text-xs ml-4">
-                  <span className="text-primary-500/40 text-[10px]">◦</span>
-                  <span>Residents</span>
-                </li>
-                <li className="flex items-center gap-2 text-white/50 text-xs ml-4">
-                  <span className="text-primary-500/40 text-[10px]">◦</span>
-                  <span>Non-residents</span>
-                </li>
-                <li className="flex items-center gap-2 text-white/50 text-xs ml-4">
-                  <span className="text-primary-500/40 text-[10px]">◦</span>
-                  <span>Foreigner/Special</span>
-                </li>
-              </ul>
               </div>
               </motion.div>
             </motion.div>
