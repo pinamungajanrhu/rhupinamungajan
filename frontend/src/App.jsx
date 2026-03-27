@@ -5,6 +5,7 @@ import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Patients from './pages/Patients'
 import RegisterPatient from './pages/RegisterPatient'
+import BarangayPCHRATForm from './pages/BarangayPCHRATForm'
 import PatientProfile from './pages/PatientProfile'
 import Assessment from './pages/Assessment'
 import Consultation from './pages/Consultation'
@@ -45,6 +46,7 @@ function App() {
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="patients" element={<Patients />} />
             <Route path="register" element={<RegisterPatient />} />
+            <Route path="barangay-assessment" element={<BarangayPCHRATForm />} />
             <Route path="patient/:id" element={<PatientProfile />} />
             <Route path="assessment/:id" element={<Assessment />} />
             <Route path="consultation/:id" element={<Consultation />} />

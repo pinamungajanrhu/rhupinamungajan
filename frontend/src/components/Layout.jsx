@@ -54,7 +54,10 @@ const Layout = () => {
   const menuItems = [
     { path: '/dashboard', icon: Home, label: 'Dashboard' },
     { path: '/patients', icon: Users, label: 'Patients' },
-    ...(user?.role === 'barangay' ? [{ path: '/register', icon: UserPlus, label: 'Register Patient' }] : []),
+    ...(user?.role === 'barangay' ? [
+      { path: '/register', icon: UserPlus, label: 'Register Patient' },
+      { path: '/barangay-assessment', icon: FileText, label: 'PCHRAT Assessment' }
+    ] : []),
     { path: '/reports', icon: BarChart3, label: 'Reports' },
   ]
 
