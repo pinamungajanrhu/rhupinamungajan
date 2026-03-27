@@ -469,6 +469,9 @@ const Landing = () => {
                     <span>{item}</span>
                   </li>
                 ))}
+                <li className="flex items-start gap-3 text-primary-400 text-sm font-medium italic mt-2">
+                  <span className="ml-7">and more...</span>
+                </li>
               </ul>
             </motion.div>
 
@@ -553,7 +556,8 @@ const Landing = () => {
                     </li>
                   ))}
                 </div>
-                <p className="text-white/40 text-xs mt-2 italic">*For prenatal care and employment purposes only</p>
+                <p className="text-rose-400 text-xs mt-2 font-medium italic">and more...</p>
+                <p className="text-white/40 text-xs mt-1 italic">*For prenatal care and employment purposes only</p>
               </div>
             </motion.div>
           </div>
