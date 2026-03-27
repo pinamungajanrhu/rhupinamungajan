@@ -55,8 +55,7 @@ const Layout = () => {
     { path: '/dashboard', icon: Home, label: 'Dashboard' },
     { path: '/patients', icon: Users, label: 'Patients' },
     ...(user?.role === 'barangay' ? [
-      { path: '/register', icon: UserPlus, label: 'Register Patient' },
-      { path: '/barangay-assessment', icon: FileText, label: 'PCHRAT Assessment' }
+      { path: '/barangay-assessment', icon: UserPlus, label: 'Patient Registration' }
     ] : []),
     { path: '/reports', icon: BarChart3, label: 'Reports' },
   ]
@@ -81,21 +80,21 @@ const Layout = () => {
       <motion.aside
         initial={false}
         animate={{ x: sidebarOpen ? 0 : -280 }}
-        className={`fixed left-0 top-0 h-full w-72 bg-white border-r border-gray-200 z-40 lg:translate-x-0 lg:static lg:z-0 lg:block transition-transform duration-300`}
+        className={`fixed left-0 top-0 h-full w-72 bg-white border-r border-gray-200 z-40 lg:translate-x-0 lg:sticky lg:top-0 lg:h-screen lg:z-0 lg:flex lg:flex-col transition-transform duration-300`}
       >
-        <div className="p-6 border-b border-gray-200">
+        <div className="h-16 flex items-center px-6 border-b border-gray-200">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 flex items-center justify-center">
+            <div className="w-8 h-8 flex items-center justify-center">
               <img src="/rhu logo-Photoroom.png" alt="RHU Logo" className="w-full h-full object-contain" />
             </div>
             <div>
-              <h1 className="font-semibold text-gray-900">Pinamungahan</h1>
-              <p className="text-xs text-gray-500">Health System</p>
+              <h1 className="font-bold text-gray-900 leading-none">Pinamungahan</h1>
+              <p className="text-[10px] text-gray-500 uppercase tracking-wider font-semibold mt-0.5">Health System</p>
             </div>
           </div>
         </div>
 
-        <nav className="p-4">
+        <nav className="p-4 flex-1 overflow-y-auto">
           <div className="space-y-1">
             {menuItems.map((item) => {
               const Icon = item.icon
@@ -121,17 +120,19 @@ const Layout = () => {
           </div>
         </nav>
 
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
-          <div className="mb-4">
-            <p className="text-sm font-medium text-gray-900">{user?.fullName}</p>
-            <p className="text-xs text-gray-500">{getRoleDisplayName(user?.role)}</p>
+        <div className="p-4 border-t border-gray-200 mt-auto bg-white">
+          <div className="mb-4 px-2 overflow-hidden">
+            <p className="text-sm font-semibold text-gray-900 truncate" title={user?.fullName}>
+              {user?.fullName}
+            </p>
+            <p className="text-xs text-gray-500 truncate">{getRoleDisplayName(user?.role)}</p>
           </div>
           <button
             onClick={handleLogout}
-            className="sidebar-item w-full text-red-600 hover:text-red-700 hover:bg-red-50"
+            className="sidebar-item w-full text-red-600 hover:text-red-700 hover:bg-red-50 flex items-center gap-3 px-3 py-2 rounded-lg transition-all border border-transparent hover:border-red-100"
           >
-            <LogOut size={20} />
-            <span className="font-medium">Logout</span>
+            <LogOut size={18} />
+            <span className="font-semibold">Logout</span>
           </button>
         </div>
       </motion.aside>
@@ -150,8 +151,8 @@ const Layout = () => {
       {/* Main content */}
       <div className="flex-1 flex flex-col min-h-screen">
         {/* Header */}
-        <header className="bg-white border-b border-gray-200 px-4 py-3 lg:px-6">
-          <div className="flex items-center justify-between">
+        <header className="h-16 flex items-center bg-white border-b border-gray-200 px-4 lg:px-6 sticky top-0 z-30">
+          <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}

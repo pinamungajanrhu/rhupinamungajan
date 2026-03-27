@@ -22,6 +22,7 @@ import {
 } from 'lucide-react'
 import axios from 'axios'
 import toast from 'react-hot-toast'
+import { PINAMUNGAHAN_BARANGAYS } from '../constants'
 
 const BarangayPCHRATForm = () => {
   const navigate = useNavigate()
@@ -367,8 +368,8 @@ const BarangayPCHRATForm = () => {
         bite_event_description: formData.present_illness_history,
         date_of_exposure: '',
         
-        // Family history as array
-        comorbidities: getFamilyHistoryArray(),
+        // Family history as string
+        comorbidities: getFamilyHistoryArray().join(', '),
         
         // Personal history summary
         personal_history: getPersonalHistorySummary(),
@@ -396,7 +397,7 @@ const BarangayPCHRATForm = () => {
         blood_lipids: formData.lab_total_cholesterol || '',
         urine_protein: formData.lab_urinalysis_protein || '',
         urine_ketones: formData.lab_urinalysis_ketones || '',
-        laboratory_request: getLabRequests(),
+        laboratory_request: getLabRequests().join(', '),
         imaging: '',
         
         // Management
@@ -532,8 +533,8 @@ const BarangayPCHRATForm = () => {
             <FileText size={32} className="text-white" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold">Primary Care Health Risk Assessment Tool (PCHRAT)</h1>
-            <p className="text-primary-100 mt-1">Barangay Health Worker Assessment Form</p>
+            <h1 className="text-3xl font-bold">Patient Registration & PCHRAT Assessment</h1>
+            <p className="text-primary-100 mt-1">Unified Registration and Health Risk Assessment Form</p>
           </div>
         </div>
       </div>
@@ -750,7 +751,17 @@ const PatientInfoStep = ({ formData, onChange }) => (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="label">Barangay <span className="text-red-500">*</span></label>
-          <input type="text" value={formData.barangay} onChange={(e) => onChange('barangay', e.target.value)} className="input" placeholder="Enter barangay" />
+          <select 
+            value={formData.barangay} 
+            onChange={(e) => onChange('barangay', e.target.value)} 
+            className="input"
+            required
+          >
+            <option value="">Select Barangay</option>
+            {PINAMUNGAHAN_BARANGAYS.map(brgy => (
+              <option key={brgy} value={brgy}>{brgy}</option>
+            ))}
+          </select>
         </div>
         <div>
           <label className="label">City/Municipality</label>

@@ -13,6 +13,7 @@ import axios from 'axios'
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from 'chart.js'
 import { Bar, Pie } from 'react-chartjs-2'
 import { useAuth } from '../contexts/AuthContext'
+import { PINAMUNGAHAN_BARANGAYS } from '../constants'
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement)
 
@@ -85,11 +86,11 @@ const Dashboard = () => {
   }
 
   const barangayChartData = {
-    labels: barangayDistribution.slice(0, 5).map(item => item.barangay),
+    labels: barangayDistribution.slice(0, 10).map(item => item.barangay),
     datasets: [
       {
         label: 'Patients',
-        data: barangayDistribution.slice(0, 5).map(item => item.count),
+        data: barangayDistribution.slice(0, 10).map(item => item.count),
         backgroundColor: '#22c55e',
         borderRadius: 6
       }
@@ -184,9 +185,9 @@ const Dashboard = () => {
             className="input w-48"
           >
             <option value="">All Barangays</option>
-            {barangayDistribution.map(item => (
-              <option key={item.barangay} value={item.barangay}>
-                {item.barangay}
+            {PINAMUNGAHAN_BARANGAYS.map(brgy => (
+              <option key={brgy} value={brgy}>
+                {brgy}
               </option>
             ))}
           </select>

@@ -17,6 +17,7 @@ import {
 import axios from 'axios'
 import { useAuth } from '../contexts/AuthContext'
 import { exportPatientsToXML, downloadXML } from '../utils/xmlExport'
+import { PINAMUNGAHAN_BARANGAYS } from '../constants'
 
 const Patients = () => {
   const { user } = useAuth()
@@ -26,11 +27,9 @@ const Patients = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
   const [barangayFilter, setBarangayFilter] = useState('')
-  const [barangays, setBarangays] = useState([])
 
   useEffect(() => {
     fetchPatients()
-    fetchBarangays()
   }, [searchTerm, statusFilter, barangayFilter])
 
   const fetchPatients = async () => {
@@ -46,15 +45,6 @@ const Patients = () => {
       console.error('Error fetching patients:', error)
     } finally {
       setLoading(false)
-    }
-  }
-
-  const fetchBarangays = async () => {
-    try {
-      const response = await axios.get('/api/residents/barangays/list')
-      setBarangays(response.data)
-    } catch (error) {
-      console.error('Error fetching barangays:', error)
     }
   }
 
@@ -151,11 +141,11 @@ const Patients = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => navigate('/register')}
+              onClick={() => navigate('/barangay-assessment')}
               className="btn-primary"
             >
               <Plus size={20} className="mr-2" />
-              Register Patient
+              Patient Registration
             </motion.button>
           )}
         </div>
@@ -204,7 +194,7 @@ const Patients = () => {
               className="input"
             >
               <option value="">All Barangays</option>
-              {barangays.map(barangay => (
+              {PINAMUNGAHAN_BARANGAYS.map(barangay => (
                 <option key={barangay} value={barangay}>
                   {barangay}
                 </option>
