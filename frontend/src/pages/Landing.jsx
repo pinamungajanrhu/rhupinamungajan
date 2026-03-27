@@ -214,40 +214,17 @@ const Landing = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/70 to-slate-950/50 z-10"></div>
         </div>
 
-        {/* Image Indicators & Navigation */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-4 z-20">
-          {/* Prev Button */}
-          <motion.button
-            onClick={prevImage}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center text-white hover:bg-white/30 transition-all"
-          >
-            <ArrowLeft size={20} />
-          </motion.button>
-
-          {/* Indicators */}
-          <div className="flex gap-2">
-            {rhuImages.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentImageIndex(index)}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  index === currentImageIndex ? 'bg-primary-500 w-8' : 'bg-white/50 hover:bg-white/80 w-2'
-                }`}
-              />
-            ))}
-          </div>
-
-          {/* Next Button */}
-          <motion.button
-            onClick={nextImage}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center text-white hover:bg-white/30 transition-all"
-          >
-            <ChevronRight size={24} />
-          </motion.button>
+        {/* Image Indicators Only */}
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+          {rhuImages.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentImageIndex(index)}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                index === currentImageIndex ? 'bg-primary-500 w-8' : 'bg-white/50 hover:bg-white/80 w-2'
+              }`}
+            />
+          ))}
         </div>
 
         <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full relative z-10">
