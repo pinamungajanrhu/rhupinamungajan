@@ -8,6 +8,9 @@ const router = express.Router();
 const dbPath = path.join(__dirname, '..', 'database', 'rhu.db');
 const db = new sqlite3.Database(dbPath);
 
+// Use environment variable or fallback for development
+const JWT_SECRET = process.env.JWT_SECRET || 'rhu-pinamungahan-dev-secret-key-2024';
+
 // Login route
 router.post('/login', (req, res) => {
   const { username, password } = req.body;
@@ -35,7 +38,7 @@ router.post('/login', (req, res) => {
 
       const token = jwt.sign(
         { id: user.id, username: user.username, role: user.role, fullName: user.full_name },
-        process.env.JWT_SECRET,
+        JWT_SECRET,
         { expiresIn: '24h' }
       );
 
@@ -60,7 +63,7 @@ router.get('/verify', (req, res) => {
     return res.status(401).json({ error: 'Token required' });
   }
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+  jwt.verify(token, JWT_SECRET, (err, user) => {
     if (err) {
       return res.status(403).json({ error: 'Invalid token' });
     }
