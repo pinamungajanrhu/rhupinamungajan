@@ -7,6 +7,8 @@ import {
   HeartPulse, 
   FileText, 
   ArrowRight,
+  ArrowLeft,
+  ChevronRight,
   LogIn,
   UserPlus,
   Home,
@@ -31,6 +33,7 @@ const Landing = () => {
   const { user, loading, logout } = useAuth()
   const navigate = useNavigate()
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [communitySlideIndex, setCommunitySlideIndex] = useState(0)
 
   // New images from public folder
   const rhuImages = [
@@ -41,6 +44,15 @@ const Landing = () => {
     '/475505814_122145504062381937_8222510245037428534_n.jpg'
   ]
 
+  // Community section slideshow images
+  const communityImages = [
+    { img: rhuImages[0], title: 'Patient-First Care', desc: 'Personalized medical attention for every resident.' },
+    { img: rhuImages[1], title: 'Community Health Programs', desc: 'Reaching out to all 26 barangays with quality healthcare.' },
+    { img: rhuImages[2], title: 'Maternal Health Services', desc: 'Comprehensive care for mothers and newborns.' },
+    { img: rhuImages[3], title: 'Modern Health Facilities', desc: 'Equipped with the latest medical technology.' },
+    { img: rhuImages[4], title: 'Dedicated Healthcare Team', desc: 'Professional staff committed to serving the community.' }
+  ]
+
   // Auto-rotate background images
   useEffect(() => {
     const interval = setInterval(() => {
@@ -48,6 +60,31 @@ const Landing = () => {
     }, 5000) // Change every 5 seconds
     return () => clearInterval(interval)
   }, [rhuImages.length])
+
+  // Auto-rotate community section images
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCommunitySlideIndex((prev) => (prev + 1) % communityImages.length)
+    }, 6000) // Change every 6 seconds
+    return () => clearInterval(interval)
+  }, [communityImages.length])
+
+  // Manual navigation functions
+  const nextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % rhuImages.length)
+  }
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + rhuImages.length) % rhuImages.length)
+  }
+
+  const nextCommunitySlide = () => {
+    setCommunitySlideIndex((prev) => (prev + 1) % communityImages.length)
+  }
+
+  const prevCommunitySlide = () => {
+    setCommunitySlideIndex((prev) => (prev - 1 + communityImages.length) % communityImages.length)
+  }
 
   const features = [
     {
@@ -177,14 +214,14 @@ const Landing = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/70 to-slate-950/50 z-10"></div>
         </div>
 
-        {/* Image Indicators */}
+        {/* Image Indicators Only */}
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-2 z-20">
           {rhuImages.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentImageIndex(index)}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                index === currentImageIndex ? 'bg-primary-500 w-8' : 'bg-white/50 hover:bg-white/80'
+              className={`h-2 rounded-full transition-all duration-300 ${
+                index === currentImageIndex ? 'bg-primary-500 w-8' : 'bg-white/50 hover:bg-white/80 w-2'
               }`}
             />
           ))}
@@ -234,10 +271,11 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* Community Section - Dark Theme (No Background Image) */}
+      {/* Community Section - Slideshow with Services Intro */}
       <section id="community" className="relative py-32 bg-slate-950">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full relative z-10">
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-24 gap-10">
+          {/* Header */}
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-16 gap-10">
             <div className="max-w-2xl">
               <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/10 border border-white/20 mb-6">
                 <Users size={16} className="text-primary-400" />
@@ -253,75 +291,390 @@ const Landing = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {[
-              { img: rhuImages[0], title: 'Patient-First Care', desc: 'Personalized medical attention for every resident.' },
-              { img: rhuImages[4], title: 'Unified Healthcare', desc: 'A professional team working with modern tools.' },
-              { special: true, title: 'Secure & Accessible', desc: 'Digital records built with the highest privacy standards.' }
-            ].map((item, i) => (
-              <motion.div 
-                key={i}
-                whileHover={{ y: -15, scale: 1.02 }}
-                className="group relative"
+          {/* Slideshow Container */}
+          <div className="relative">
+            {/* Main Slideshow Image */}
+            <div className="relative h-[500px] lg:h-[600px] rounded-[3rem] overflow-hidden shadow-2xl border-4 border-white/10">
+              {communityImages.map((item, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: index === communitySlideIndex ? 1 : 0 }}
+                  transition={{ duration: 0.8, ease: "easeInOut" }}
+                  className="absolute inset-0"
+                >
+                  <img 
+                    src={item.img} 
+                    alt={item.title} 
+                    className="w-full h-full object-cover object-top"
+                  />
+                  {/* Overlay with text */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent"></div>
+                  <div className="absolute bottom-0 left-0 right-0 p-10 lg:p-16">
+                    <motion.h4 
+                      initial={{ y: 20, opacity: 0 }}
+                      animate={{ y: index === communitySlideIndex ? 0 : 20, opacity: index === communitySlideIndex ? 1 : 0 }}
+                      transition={{ delay: 0.3, duration: 0.5 }}
+                      className="text-4xl lg:text-5xl font-bold text-white mb-4"
+                    >
+                      {item.title}
+                    </motion.h4>
+                    <motion.p 
+                      initial={{ y: 20, opacity: 0 }}
+                      animate={{ y: index === communitySlideIndex ? 0 : 20, opacity: index === communitySlideIndex ? 1 : 0 }}
+                      transition={{ delay: 0.4, duration: 0.5 }}
+                      className="text-xl text-white/80 font-medium max-w-2xl"
+                    >
+                      {item.desc}
+                    </motion.p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Navigation Controls */}
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 z-20">
+              {/* Prev Button */}
+              <motion.button
+                onClick={prevCommunitySlide}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center text-white hover:bg-white/30 transition-all"
               >
-                {item.special ? (
-                  <div className="h-[450px] rounded-[3rem] bg-white/10 p-12 flex flex-col justify-between text-white shadow-2xl relative overflow-hidden border border-white/20">
-                    <div className="absolute top-0 right-0 p-12 opacity-10">
-                      <Zap size={150} strokeWidth={1} />
-                    </div>
-                    <div className="w-16 h-16 bg-primary-600 rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-primary-900/40">
-                      <Lock size={32} strokeWidth={3} />
-                    </div>
-                    <div>
-                      <h4 className="text-4xl font-bold mb-6 leading-tight">{item.title}</h4>
-                      <p className="text-lg font-semibold text-white/70">{item.desc}</p>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex flex-col gap-8">
-                    <div className="h-[450px] rounded-[3rem] overflow-hidden shadow-2xl border-4 border-white/10">
-                      <img src={item.img} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                    </div>
-                    <div className="px-2">
-                      <h4 className="text-2xl font-bold text-white mb-3">{item.title}</h4>
-                      <p className="text-lg font-semibold text-white/70 leading-relaxed">{item.desc}</p>
-                    </div>
-                  </div>
-                )}
-              </motion.div>
-            ))}
+                <ArrowLeft size={24} />
+              </motion.button>
+
+              {/* Indicators */}
+              <div className="flex gap-2 bg-black/30 backdrop-blur-sm rounded-full px-4 py-2">
+                {communityImages.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCommunitySlideIndex(index)}
+                    className={`h-2 rounded-full transition-all duration-300 ${
+                      index === communitySlideIndex ? 'bg-primary-500 w-8' : 'bg-white/50 hover:bg-white/80 w-2'
+                    }`}
+                  />
+                ))}
+              </div>
+
+              {/* Next Button */}
+              <motion.button
+                onClick={nextCommunitySlide}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center text-white hover:bg-white/30 transition-all"
+              >
+                <ChevronRight size={28} />
+              </motion.button>
+            </div>
+          </div>
+
+          {/* Additional Info Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+            <motion.div 
+              whileHover={{ y: -5 }}
+              className="bg-white/5 rounded-2xl p-8 border border-white/10"
+            >
+              <div className="w-12 h-12 bg-primary-600/20 rounded-xl flex items-center justify-center mb-4">
+                <MapPin className="text-primary-400" size={24} />
+              </div>
+              <h4 className="text-xl font-bold text-white mb-2">26 Barangays</h4>
+              <p className="text-white/60 text-sm">Serving the entire municipality with accessible healthcare</p>
+            </motion.div>
+            <motion.div 
+              whileHover={{ y: -5 }}
+              className="bg-white/5 rounded-2xl p-8 border border-white/10"
+            >
+              <div className="w-12 h-12 bg-primary-600/20 rounded-xl flex items-center justify-center mb-4">
+                <Clock className="text-primary-400" size={24} />
+              </div>
+              <h4 className="text-xl font-bold text-white mb-2">Mon - Fri</h4>
+              <p className="text-white/60 text-sm">8:00 AM - 5:00 PM regular operating hours</p>
+            </motion.div>
+            <motion.div 
+              whileHover={{ y: -5 }}
+              className="bg-white/5 rounded-2xl p-8 border border-white/10"
+            >
+              <div className="w-12 h-12 bg-primary-600/20 rounded-xl flex items-center justify-center mb-4">
+                <Shield className="text-primary-400" size={24} />
+              </div>
+              <h4 className="text-xl font-bold text-white mb-2">DOH Accredited</h4>
+              <p className="text-white/60 text-sm">Licensed and certified primary care facility</p>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Features Grid - Dark Theme */}
+      {/* Services Section - Facility Services */}
       <section id="features" className="py-32 bg-slate-900 border-y border-slate-800">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-24">
-            <h2 className="text-[11px] font-bold text-primary-400 uppercase tracking-[0.3em] mb-6">Core Capabilities</h2>
-            <h3 className="text-5xl lg:text-7xl font-bold text-white mb-10 tracking-tighter leading-none">Modern Health <br /> Ecosystem.</h3>
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-[11px] font-bold text-primary-400 uppercase tracking-[0.3em] mb-6">Our Facility</h2>
+            <h3 className="text-5xl lg:text-7xl font-bold text-white mb-10 tracking-tighter leading-none">Medical & Laboratory <br /> Services.</h3>
             <p className="text-xl text-white/70 font-semibold leading-relaxed">
-              Every feature is meticulously designed to optimize the healthcare 
-              journey for both staff and residents.
+              Comprehensive healthcare services available at Pinamungajan RHU. 
+              Updated as of 2026.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, i) => (
-              <motion.div
-                key={i}
-                whileHover={{ scale: 1.02, y: -5 }}
-                className="p-10 rounded-[2.5rem] bg-white/5 border border-white/10 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.3)] hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.4)] hover:bg-white/10 transition-all duration-500"
-              >
-                <div className={`w-16 h-16 ${feature.color} bg-opacity-20 rounded-2xl flex items-center justify-center mb-10 shadow-sm`}>
-                  <feature.icon size={32} strokeWidth={2.5} className="text-white" />
+          {/* Services Grid - 2 Categories */}
+          <div className="grid lg:grid-cols-2 gap-8">
+            {/* Medical Services */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="bg-slate-950 rounded-[2.5rem] p-10 border border-white/10"
+            >
+              <div className="flex items-center gap-4 mb-8">
+                <div className="w-14 h-14 bg-primary-600/20 rounded-2xl flex items-center justify-center">
+                  <Stethoscope size={28} className="text-primary-400" />
                 </div>
-                <h4 className="text-2xl font-bold text-white mb-6 leading-tight">{feature.title}</h4>
-                <p className="text-white/70 font-semibold text-base leading-relaxed">
-                  {feature.description}
-                </p>
-              </motion.div>
-            ))}
+                <h4 className="text-2xl font-bold text-white">Medical Services</h4>
+              </div>
+              
+              {/* First Section */}
+              <ul className="space-y-2">
+                {[
+                  'Medical Certificate',
+                  'Health Certificate',
+                  'Medico legal fees',
+                  'COVID Vaccination Certificate',
+                  'Quarantine/Isolation Certificate',
+                  'Vaccine Certificate',
+                  'Cardiopulmonary Clearance Certificate',
+                  'Birthing Center Fee',
+                  'Hygiene Examination',
+                  'Drug Dependency Examination'
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-3 text-white/70 text-sm">
+                    <span className="text-primary-500">-</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+
+              {/* Updated as of 2026 */}
+              <p className="text-primary-400 text-sm font-medium my-4">Updated as of 2026</p>
+
+              {/* Second Section */}
+              <ul className="space-y-2">
+                {[
+                  'Tooth Extraction',
+                  'Tooth Filing',
+                  'Cleaning/Oral Prophylaxis',
+                  'Dental Certificate',
+                  'Burial Permit Fees',
+                  'Transfer of Cadaver',
+                  'Fee for Exhumation/Removal of Cadaver',
+                  'Animal Bite Treatment Center (ABTC) Fee'
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-3 text-white/70 text-sm">
+                    <span className="text-primary-500">-</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+                <li className="flex items-start gap-3 text-white/70 text-sm">
+                  <span className="text-primary-500">-</span>
+                  <span>Pre-marriage Counseling Fee:</span>
+                </li>
+                <li className="flex items-start gap-3 text-white/60 text-sm ml-6">
+                  <span className="text-primary-500/50">•</span>
+                  <span>Residents</span>
+                </li>
+                <li className="flex items-start gap-3 text-white/60 text-sm ml-6">
+                  <span className="text-primary-500/50">•</span>
+                  <span>Non-residents</span>
+                </li>
+                <li className="flex items-start gap-3 text-white/60 text-sm ml-6">
+                  <span className="text-primary-500/50">•</span>
+                  <span>Foreigner/Special</span>
+                </li>
+              </ul>
+            </motion.div>
+
+            {/* Laboratory Services */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="bg-slate-950 rounded-[2.5rem] p-10 border border-white/10"
+            >
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-14 h-14 bg-rose-600/20 rounded-2xl flex items-center justify-center">
+                  <Activity size={28} className="text-rose-400" />
+                </div>
+                <h4 className="text-2xl font-bold text-white">Laboratory Services</h4>
+              </div>
+              
+              {/* Hematology */}
+              <div className="mb-4">
+                <h5 className="text-rose-400 font-semibold mb-2 text-sm">Hematology</h5>
+                <ul className="space-y-1">
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">a.</span>
+                    <span>Complete Blood Count (CBC)</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">b.</span>
+                    <span>Blood Typing</span>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Blood Chemistry Tests */}
+              <div className="mb-4">
+                <h5 className="text-rose-400 font-semibold mb-2 text-sm">Blood Chemistry Tests</h5>
+                <ul className="space-y-1">
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">a.</span>
+                    <span>75 grams OGTT</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">b.</span>
+                    <span>ALT/SGPT</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">c.</span>
+                    <span>AST/SGOT</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">d.</span>
+                    <span>Blood Urea Nitrogen (BUN)</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">e.</span>
+                    <span>Blood Uric Acid (BUA)</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">f.</span>
+                    <span>Calcium</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">g.</span>
+                    <span>Chloride</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">h.</span>
+                    <span>Creatinine</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">i.</span>
+                    <span>Fasting Blood Sugar</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">j.</span>
+                    <span>Lipid Panel</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">k.</span>
+                    <span>Potassium</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">l.</span>
+                    <span>Random Blood Sugar</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">m.</span>
+                    <span>Sodium</span>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Updated As of 2026 */}
+              <p className="text-rose-400 text-sm font-medium my-4">Updated As of 2026</p>
+
+              {/* Clinical Microscopy Test */}
+              <div className="mb-4">
+                <h5 className="text-rose-400 font-semibold mb-2 text-sm">Clinical Microscopy Test:</h5>
+                <ul className="space-y-1">
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">a.</span>
+                    <span>Sputum Examination</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">b.</span>
+                    <span>Stool Examination</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">c.</span>
+                    <span>Fecal Occult Blood Test (FORT)</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">d.</span>
+                    <span>Urinalysis</span>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Immunologic Test */}
+              <div>
+                <h5 className="text-rose-400 font-semibold mb-2 text-sm">Immunologic Test:</h5>
+                <ul className="space-y-1">
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">a.</span>
+                    <span>Anti-HAV</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">b.</span>
+                    <span>COVID-19 Rapid Antigen Test</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">c.</span>
+                    <span>Dengue Duo</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">d.</span>
+                    <span>Dengue IgG/IgM</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">e.</span>
+                    <span>Dengue NS1</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">f.</span>
+                    <span>Free T3 (FT3)</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">g.</span>
+                    <span>Free T4 (FT4)</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">h.</span>
+                    <span>HbA1c</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">i.</span>
+                    <span>Hepatitis B Surface Antigen (HbsAg)</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">j.</span>
+                    <span>HIV Testing fee (for prenatal care and employment purposes only)</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">k.</span>
+                    <span>Pregnancy Test (PT)</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">l.</span>
+                    <span>Prostate-Specific Antigen (PSA)</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">m.</span>
+                    <span>Syphilis (VDRL)</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">n.</span>
+                    <span>Thyroid Stimulating Hormone (TSH)</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-white/70 text-sm">
+                    <span className="text-rose-500/70 text-xs">o.</span>
+                    <span>Typhi DOT IgG/IgM</span>
+                  </li>
+                </ul>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
