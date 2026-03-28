@@ -25,6 +25,7 @@ async function initDatabase() {
           password TEXT NOT NULL,
           role TEXT NOT NULL CHECK (role IN ('barangay', 'rhu', 'doctor')),
           full_name TEXT NOT NULL,
+          barangay TEXT,
           created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
           updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )
@@ -113,6 +114,8 @@ async function initDatabase() {
           follow_up_date DATE,
           laboratory_request TEXT,
           imaging TEXT,
+          nature_of_visit TEXT CHECK (nature_of_visit IN ('New Registration', 'New Consultation', 'New Admission (for birthing services/BUCAS facilities)', 'Less than 24H', 'More than 24H', 'Follow-Up')) DEFAULT 'New Registration',
+          type_of_consultation TEXT,
           diagnosis TEXT,
           treatment_plan TEXT,
           prescription TEXT,
@@ -173,7 +176,8 @@ async function insertMockUsers() {
         username: 'barangay01',
         password: 'password123',
         role: 'barangay',
-        full_name: 'Juan Dela Cruz'
+        full_name: 'Juan Dela Cruz',
+        barangay: 'Poblacion'
       },
       {
         username: 'rhu01',
@@ -190,14 +194,14 @@ async function insertMockUsers() {
     ];
 
     const insertUser = db.prepare(`
-      INSERT OR IGNORE INTO users (username, password, role, full_name)
-      VALUES (?, ?, ?, ?)
+      INSERT OR IGNORE INTO users (username, password, role, full_name, barangay)
+      VALUES (?, ?, ?, ?, ?)
     `);
 
     let completed = 0;
     mockUsers.forEach(async (user) => {
       const hashedPassword = await bcrypt.hash(user.password, 10);
-      insertUser.run([user.username, hashedPassword, user.role, user.full_name], (err) => {
+      insertUser.run([user.username, hashedPassword, user.role, user.full_name, user.barangay || null], (err) => {
         if (err) {
           console.error('Error inserting user:', err);
         } else {

@@ -29,8 +29,12 @@ const Patients = () => {
   const [barangayFilter, setBarangayFilter] = useState('')
 
   useEffect(() => {
-    fetchPatients()
-  }, [searchTerm, statusFilter, barangayFilter])
+    // For barangay users, barangayFilter should be their assigned barangay by default
+    if (user?.role === 'barangay') {
+      setBarangayFilter(user.barangay);
+    }
+    fetchPatients();
+  }, [searchTerm, statusFilter, barangayFilter]);
 
   const fetchPatients = async () => {
     try {
@@ -186,21 +190,23 @@ const Patients = () => {
             </select>
           </div>
 
-          {/* Barangay Filter */}
-          <div className="lg:w-64">
-            <select
-              value={barangayFilter}
-              onChange={(e) => setBarangayFilter(e.target.value)}
-              className="input"
-            >
-              <option value="">All Barangays</option>
-              {PINAMUNGAHAN_BARANGAYS.map(barangay => (
-                <option key={barangay} value={barangay}>
-                  {barangay}
-                </option>
-              ))}
-            </select>
-          </div>
+          {/* Barangay Filter (not for barangay users) */}
+          {user?.role !== 'barangay' && (
+            <div className="lg:w-64">
+              <select
+                value={barangayFilter}
+                onChange={(e) => setBarangayFilter(e.target.value)}
+                className="input"
+              >
+                <option value="">All Barangays</option>
+                {PINAMUNGAHAN_BARANGAYS.map(barangay => (
+                  <option key={barangay} value={barangay}>
+                    {barangay}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
         </div>
       </motion.div>
 

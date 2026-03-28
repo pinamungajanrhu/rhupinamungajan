@@ -28,80 +28,41 @@ router.get('/resident/:residentId', authenticateToken, authorizeRole(['rhu', 'do
   );
 });
 
-// Create or update assessment (RHU Staff and Barangay Encoders)
+// Create assessment (RHU Staff and Barangay Encoders)
 router.post('/', authenticateToken, authorizeRole(['rhu', 'barangay']), (req, res) => {
   const assessmentData = req.body;
   assessmentData.created_at = new Date().toISOString();
   assessmentData.updated_at = new Date().toISOString();
 
-  // Check if assessment already exists for this resident
-  db.get(
-    'SELECT id FROM assessments WHERE resident_id = ?',
-    [assessmentData.resident_id],
-    (err, existingAssessment) => {
+  // Create new assessment (history is preserved by always inserting)
+  const columns = Object.keys(assessmentData).join(', ');
+  const placeholders = Object.keys(assessmentData).map(() => '?').join(', ');
+  const values = Object.values(assessmentData);
+
+  db.run(
+    `INSERT INTO assessments (${columns}) VALUES (${placeholders})`,
+    values,
+    function(err) {
       if (err) {
-        return res.status(500).json({ error: 'Database error' });
+        console.error('Error creating assessment:', err);
+        return res.status(500).json({ error: 'Failed to create assessment' });
       }
 
-      if (existingAssessment) {
-        // Update existing assessment
-        const setClause = Object.keys(assessmentData).map(key => `${key} = ?`).join(', ');
-        const values = [...Object.values(assessmentData), assessmentData.resident_id];
-
-        db.run(
-          `UPDATE assessments SET ${setClause} WHERE resident_id = ?`,
-          values,
-          function(err) {
-            if (err) {
-              return res.status(500).json({ error: 'Failed to update assessment' });
-            }
-
-            // Update resident status to "Ready for Doctor Consultation"
-            db.run(
-              'UPDATE residents SET status = ?, updated_at = ? WHERE id = ?',
-              ['Ready for Doctor Consultation', new Date().toISOString(), assessmentData.resident_id],
-              (err) => {
-                if (err) {
-                  console.error('Error updating resident status:', err);
-                }
-              }
-            );
-
-            res.json({ message: 'Assessment updated successfully' });
+      // Update resident status to "Ready for Doctor Consultation"
+      db.run(
+        'UPDATE residents SET status = ?, updated_at = ? WHERE id = ?',
+        ['Ready for Doctor Consultation', new Date().toISOString(), assessmentData.resident_id],
+        (err) => {
+          if (err) {
+            console.error('Error updating resident status:', err);
           }
-        );
-      } else {
-        // Create new assessment
-        const columns = Object.keys(assessmentData).join(', ');
-        const placeholders = Object.keys(assessmentData).map(() => '?').join(', ');
-        const values = Object.values(assessmentData);
+        }
+      );
 
-        db.run(
-          `INSERT INTO assessments (${columns}) VALUES (${placeholders})`,
-          values,
-          function(err) {
-            if (err) {
-              return res.status(500).json({ error: 'Failed to create assessment' });
-            }
-
-            // Update resident status to "Ready for Doctor Consultation"
-            db.run(
-              'UPDATE residents SET status = ?, updated_at = ? WHERE id = ?',
-              ['Ready for Doctor Consultation', new Date().toISOString(), assessmentData.resident_id],
-              (err) => {
-                if (err) {
-                  console.error('Error updating resident status:', err);
-                }
-              }
-            );
-
-            res.status(201).json({
-              id: this.lastID,
-              message: 'Assessment created successfully'
-            });
-          }
-        );
-      }
+      res.status(201).json({
+        id: this.lastID,
+        message: 'Assessment created successfully'
+      });
     }
   );
 });

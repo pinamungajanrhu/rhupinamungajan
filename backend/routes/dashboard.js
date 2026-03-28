@@ -9,7 +9,7 @@ const db = new sqlite3.Database(dbPath);
 
 // Get dashboard statistics
 router.get('/stats', authenticateToken, (req, res) => {
-  const { role } = req.user;
+  const { role, barangay: userBarangay } = req.user;
   const { barangay } = req.query;
 
   let whereClause = 'WHERE 1=1';
@@ -17,8 +17,8 @@ router.get('/stats', authenticateToken, (req, res) => {
 
   // Role-based filtering
   if (role === 'barangay') {
-    whereClause += ' AND r.created_by = ?';
-    params.push(req.user.id);
+    whereClause += ' AND r.barangay = ?';
+    params.push(userBarangay);
   }
 
   if (barangay) {

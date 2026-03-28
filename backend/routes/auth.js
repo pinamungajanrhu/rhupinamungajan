@@ -31,26 +31,32 @@ router.post('/login', (req, res) => {
         return res.status(401).json({ error: 'Invalid credentials' });
       }
 
-      const isPasswordValid = await bcrypt.compare(password, user.password);
-      if (!isPasswordValid) {
-        return res.status(401).json({ error: 'Invalid credentials' });
-      }
-
-      const token = jwt.sign(
-        { id: user.id, username: user.username, role: user.role, fullName: user.full_name },
-        JWT_SECRET,
-        { expiresIn: '24h' }
-      );
-
-      res.json({
-        token,
-        user: {
-          id: user.id,
-          username: user.username,
-          role: user.role,
-          fullName: user.full_name
+      try {
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+          return res.status(401).json({ error: 'Invalid credentials' });
         }
-      });
+
+        const token = jwt.sign(
+          { id: user.id, username: user.username, role: user.role, fullName: user.full_name, barangay: user.barangay },
+          JWT_SECRET,
+          { expiresIn: '24h' }
+        );
+
+        res.json({
+          token,
+          user: {
+            id: user.id,
+            username: user.username,
+            role: user.role,
+            fullName: user.full_name,
+            barangay: user.barangay
+          }
+        });
+      } catch (error) {
+        console.error('Error in /login bcrypt/jwt:', error);
+        res.status(500).json({ error: 'Authentication error' });
+      }
     }
   );
 });

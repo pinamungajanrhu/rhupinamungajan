@@ -131,7 +131,7 @@ const PatientProfile = () => {
       case 'info':
         return <InfoTab patient={patient} user={user} />
       case 'assessment':
-        return <AssessmentTab assessment={assessment} />
+        return <AssessmentTab assessment={assessment} user={user} />
       case 'consultations':
         return <ConsultationsTab consultations={consultations} user={user} />
       case 'prescriptions':
@@ -381,7 +381,7 @@ const InfoTab = ({ patient, user }) => {
           
           {patient.philhealth_number && (
             <div className="flex justify-between">
-              <span className="text-sm text-gray-600">PhilHealth Number</span>
+              <span className="text-sm text-gray-600">PhilHealth Identification number (PIN)</span>
               <span className="text-sm font-medium text-gray-900">{patient.philhealth_number}</span>
             </div>
           )}
@@ -432,12 +432,22 @@ const InfoTab = ({ patient, user }) => {
 }
 
 // Assessment Tab Component
-const AssessmentTab = ({ assessment }) => {
+const AssessmentTab = ({ assessment, user }) => {
   if (!assessment) {
     return (
       <div className="card text-center py-8">
         <FileText size={48} className="mx-auto text-gray-300 mb-4" />
         <p className="text-gray-500">No assessment data available</p>
+      </div>
+    )
+  }
+
+  // Only doctors can see detailed assessment data
+  if (user?.role !== 'doctor') {
+    return (
+      <div className="card text-center py-8">
+        <Shield size={48} className="mx-auto text-gray-300 mb-4" />
+        <p className="text-gray-500">Only doctors are authorized to view detailed health risk assessments.</p>
       </div>
     )
   }
@@ -461,6 +471,18 @@ const AssessmentTab = ({ assessment }) => {
           <p className="text-sm text-gray-600">Assessed By</p>
           <p className="font-medium text-gray-900">{assessment.assessed_by}</p>
         </div>
+
+        <div>
+          <p className="text-sm text-gray-600">Nature of Visit</p>
+          <p className="font-medium text-gray-900">{assessment.nature_of_visit}</p>
+        </div>
+
+        {assessment.type_of_consultation && (
+          <div>
+            <p className="text-sm text-gray-600">Type of Consultation</p>
+            <p className="font-medium text-gray-900">{assessment.type_of_consultation}</p>
+          </div>
+        )}
 
         {assessment.type_of_exposure && (
           <div>
@@ -505,6 +527,16 @@ const ConsultationsTab = ({ consultations, user }) => {
       <div className="card text-center py-8">
         <Heart size={48} className="mx-auto text-gray-300 mb-4" />
         <p className="text-gray-500">No consultations available</p>
+      </div>
+    )
+  }
+
+  // Only doctors can see consultation details
+  if (user?.role !== 'doctor') {
+    return (
+      <div className="card text-center py-8">
+        <Shield size={48} className="mx-auto text-gray-300 mb-4" />
+        <p className="text-gray-500">Only doctors are authorized to view consultation details.</p>
       </div>
     )
   }
@@ -593,7 +625,17 @@ const ConsultationsTab = ({ consultations, user }) => {
 
 // Prescriptions Tab Component
 const PrescriptionsTab = ({ consultations, user }) => {
-  const prescriptions = consultations.filter(c => c.prescription && user?.role !== 'barangay')
+  // Only doctors can see prescriptions
+  if (user?.role !== 'doctor') {
+    return (
+      <div className="card text-center py-8">
+        <Shield size={48} className="mx-auto text-gray-300 mb-4" />
+        <p className="text-gray-500">Only doctors are authorized to view prescriptions.</p>
+      </div>
+    )
+  }
+
+  const prescriptions = consultations.filter(c => c.prescription)
 
   if (prescriptions.length === 0) {
     return (

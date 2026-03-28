@@ -9,7 +9,7 @@ const db = new sqlite3.Database(dbPath);
 
 // Get all residents with role-based filtering
 router.get('/', authenticateToken, (req, res) => {
-  const { role } = req.user;
+  const { role, barangay: userBarangay } = req.user;
   const { status, barangay, search } = req.query;
   
   let query = 'SELECT * FROM residents WHERE 1=1';
@@ -17,9 +17,15 @@ router.get('/', authenticateToken, (req, res) => {
 
   // Role-based filtering
   if (role === 'barangay') {
-    // Barangay users can only see residents they registered
-    query += ' AND created_by = ?';
-    params.push(req.user.id);
+    // Barangay users default to their assigned barangay, 
+    // but can search globally across all of Pinamungajan
+    if (search) {
+      // Global search: no barangay filter applied when searching
+    } else {
+      // Default view: scoped to their assigned barangay
+      query += ' AND barangay = ?';
+      params.push(userBarangay);
+    }
   }
 
   // Status filtering
@@ -28,8 +34,8 @@ router.get('/', authenticateToken, (req, res) => {
     params.push(status);
   }
 
-  // Barangay filtering
-  if (barangay) {
+  // Explicit barangay filtering (from query params)
+  if (barangay && role !== 'barangay') {
     query += ' AND barangay = ?';
     params.push(barangay);
   }
@@ -49,6 +55,31 @@ router.get('/', authenticateToken, (req, res) => {
     }
     res.json(residents);
   });
+});
+
+// Check for duplicate resident
+router.post('/check-duplicate', authenticateToken, (req, res) => {
+  const { first_name, last_name, birthdate } = req.body;
+
+  if (!first_name || !last_name || !birthdate) {
+    return res.status(400).json({ error: 'First name, last name, and birthdate are required' });
+  }
+
+  db.get(
+    'SELECT * FROM residents WHERE first_name = ? AND last_name = ? AND birthdate = ?',
+    [first_name, last_name, birthdate],
+    (err, resident) => {
+      if (err) {
+        return res.status(500).json({ error: 'Database error' });
+      }
+
+      if (resident) {
+        return res.json({ isDuplicate: true, resident });
+      }
+
+      res.json({ isDuplicate: false });
+    }
+  );
 });
 
 // Get resident by ID

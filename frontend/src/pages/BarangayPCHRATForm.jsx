@@ -23,6 +23,7 @@ import {
 import axios from 'axios'
 import toast from 'react-hot-toast'
 import { PINAMUNGAHAN_BARANGAYS } from '../constants'
+import { toTitleCase } from '../utils/textFormat';
 
 const BarangayPCHRATForm = () => {
   const navigate = useNavigate()
@@ -227,8 +228,14 @@ const BarangayPCHRATForm = () => {
     // Metadata
     assessed_by: '',
     assessment_date: new Date().toISOString().split('T')[0],
-    facility_name: 'Pinamungajan RHU'
+    facility_name: 'Pinamungajan RHU',
+    nature_of_visit: 'New Registration',
+    type_of_consultation: ''
   })
+
+  const [isDuplicateMode, setIsDuplicateMode] = useState(false)
+  const [existingResidentId, setExistingResidentId] = useState(null)
+  const [showDuplicateModal, setShowDuplicateModal] = useState(false)
 
   const steps = [
     { id: 1, title: 'Patient Info', icon: User },
@@ -244,6 +251,11 @@ const BarangayPCHRATForm = () => {
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }))
+    
+    // Open PhilHealth consent page if "Member" is selected
+    if (field === 'philhealth_member' && value === 'Member') {
+      window.open('https://pcu.philhealth.gov.ph/consent', '_blank')
+    }
     
     // Auto-calculate BMI when weight and height are provided
     if (field === 'vital_weight_kg' || field === 'vital_height_cm') {
@@ -282,8 +294,44 @@ const BarangayPCHRATForm = () => {
     })
   }
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (validateStep()) {
+      // Check for duplicate patient on step 1
+      if (currentStep === 1) {
+        try {
+          const response = await axios.post('/api/residents/check-duplicate', {
+            first_name: formData.first_name,
+            last_name: formData.last_name,
+            birthdate: formData.birthdate
+          });
+
+          if (response.data.isDuplicate) {
+            const existing = response.data.resident;
+            setIsDuplicateMode(true);
+            setExistingResidentId(existing.id);
+            setFormData(prev => ({ 
+              ...prev, 
+              ...existing, // Fill in existing data
+              nature_of_visit: 'New Consultation' // Default
+            }));
+            setShowDuplicateModal(true);
+            return; // Wait for modal selection
+          } else {
+            // Reset duplicate mode if not a duplicate
+            setIsDuplicateMode(false);
+            setExistingResidentId(null);
+            setFormData(prev => ({ 
+              ...prev, 
+              nature_of_visit: 'New Registration'
+            }));
+          }
+        } catch (error) {
+          console.error('Error checking duplicate:', error);
+          toast.error('Failed to verify patient data');
+          return;
+        }
+      }
+
       if (currentStep < steps.length) {
         setCurrentStep(currentStep + 1)
         window.scrollTo(0, 0)
@@ -314,54 +362,59 @@ const BarangayPCHRATForm = () => {
   const handleSubmit = async () => {
     setSaving(true)
     try {
-      // First register the patient
-      const patientResponse = await axios.post('/api/residents', {
-        first_name: formData.first_name,
-        middle_name: formData.middle_name,
-        last_name: formData.last_name,
-        suffix: formData.suffix,
-        birthdate: formData.birthdate,
-        birthplace: formData.birthplace,
-        sex: formData.sex,
-        civil_status: formData.civil_status,
-        educational_attainment: formData.educational_attainment,
-        employment_status: formData.employment_status,
-        monthly_income: formData.monthly_income,
-        occupation: formData.occupation,
-        religion: formData.religion,
-        indigenous: formData.indigenous,
-        blood_type: formData.blood_type,
-        mother_first_name: formData.mother_first_name,
-        mother_last_name: formData.mother_last_name,
-        mother_middle_name: formData.mother_middle_name,
-        mother_birthdate: formData.mother_birthdate,
-        country: formData.country,
-        number_street: formData.number_street,
-        region: formData.region,
-        province: formData.province,
-        city_municipality: formData.city_municipality,
-        barangay: formData.barangay,
-        zip_code: formData.zip_code,
-        email: formData.email,
-        mobile: formData.mobile,
-        landline: formData.landline,
-        family_member: formData.family_member,
-        dswd_nhts_member: formData.dswd_nhts_member,
-        facility_household_number: formData.facility_household_number,
-        family_serial_number: formData.family_serial_number,
-        philhealth_member: formData.philhealth_member,
-        philhealth_number: formData.philhealth_number,
-        philhealth_category: formData.philhealth_category,
-        pcb_eligible: formData.pcb_eligible
-      })
+      let residentId = existingResidentId;
 
-      const residentId = patientResponse.data.id
+      // Only register a new patient if not in duplicate mode
+      if (!isDuplicateMode) {
+        const patientResponse = await axios.post('/api/residents', {
+          first_name: formData.first_name,
+          middle_name: formData.middle_name,
+          last_name: formData.last_name,
+          suffix: formData.suffix,
+          birthdate: formData.birthdate,
+          birthplace: formData.birthplace,
+          sex: formData.sex,
+          civil_status: formData.civil_status,
+          educational_attainment: formData.educational_attainment,
+          employment_status: formData.employment_status,
+          monthly_income: formData.monthly_income,
+          occupation: formData.occupation,
+          religion: formData.religion,
+          indigenous: formData.indigenous,
+          blood_type: formData.blood_type,
+          mother_first_name: formData.mother_first_name,
+          mother_last_name: formData.mother_last_name,
+          mother_middle_name: formData.mother_middle_name,
+          mother_birthdate: formData.mother_birthdate,
+          country: formData.country,
+          number_street: formData.number_street,
+          region: formData.region,
+          province: formData.province,
+          city_municipality: formData.city_municipality,
+          barangay: formData.barangay,
+          zip_code: formData.zip_code,
+          email: formData.email,
+          mobile: formData.mobile,
+          landline: formData.landline,
+          family_member: formData.family_member,
+          dswd_nhts_member: formData.dswd_nhts_member,
+          facility_household_number: formData.facility_household_number,
+          family_serial_number: formData.family_serial_number,
+          philhealth_member: formData.philhealth_member,
+          philhealth_number: formData.philhealth_number,
+          philhealth_category: formData.philhealth_category,
+          pcb_eligible: formData.pcb_eligible
+        })
+        residentId = patientResponse.data.id
+      }
 
       // Then save the PCHRAT assessment
       await axios.post('/api/assessments', {
         resident_id: residentId,
         consultation_date: formData.assessment_date,
         assessed_by: formData.assessed_by,
+        nature_of_visit: formData.nature_of_visit,
+        type_of_consultation: formData.type_of_consultation,
         
         // Convert PCHRAT data to assessment format
         type_of_exposure: '',
@@ -497,6 +550,16 @@ const BarangayPCHRATForm = () => {
 
   const getOverallRiskSummary = () => {
     return `CVD Risk: ${formData.overall_cvd_risk}, DM Risk: ${formData.overall_diabetes_risk}, Health Status: ${formData.overall_health_status}`
+  }
+
+  const handleDuplicateConfirm = () => {
+    if (!formData.nature_of_visit || !formData.type_of_consultation) {
+      toast.error('Please select nature of visit and type of consultation');
+      return;
+    }
+    setShowDuplicateModal(false);
+    setCurrentStep(2); // Proceed to next step
+    window.scrollTo(0, 0);
   }
 
   const renderStepContent = () => {
@@ -642,6 +705,79 @@ const BarangayPCHRATForm = () => {
           </motion.button>
         )}
       </div>
+
+      {/* Duplicate Patient Modal */}
+      <AnimatePresence>
+        {showDuplicateModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-white rounded-2xl shadow-xl max-w-lg w-full p-8 space-y-6"
+            >
+              <div className="flex items-center gap-4 text-primary-600">
+                <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
+                  <AlertCircle size={24} />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900">Existing Patient Found</h3>
+                  <p className="text-gray-600">Please select the visit details for this patient.</p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="label">Nature of Visit</label>
+                  <select 
+                    value={formData.nature_of_visit} 
+                    onChange={(e) => handleInputChange('nature_of_visit', e.target.value)} 
+                    className="input"
+                  >
+                    <option value="New Consultation">New Consultation</option>
+                    <option value="New Admission (for birthing services/BUCAS facilities)">New Admission (for birthing services/BUCAS facilities)</option>
+                    <option value="Less than 24H">Less than 24H</option>
+                    <option value="More than 24H">More than 24H</option>
+                    <option value="Follow-Up">Follow-Up</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="label">Type of Consultation</label>
+                  <select 
+                    value={formData.type_of_consultation} 
+                    onChange={(e) => handleInputChange('type_of_consultation', e.target.value)} 
+                    className="input"
+                  >
+                    <option value="">Select Type</option>
+                    <option value="General Consultation">General Consultation</option>
+                    <option value="Prenatal">Prenatal</option>
+                    <option value="Immunization">Immunization</option>
+                    <option value="Family Planning">Family Planning</option>
+                    <option value="Dental">Dental</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex gap-3 pt-4">
+                <button
+                  onClick={() => setShowDuplicateModal(false)}
+                  className="btn-secondary flex-1"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDuplicateConfirm}
+                  className="btn-primary flex-1"
+                >
+                  Confirm & Continue
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
@@ -843,12 +979,24 @@ const PatientInfoStep = ({ formData, onChange }) => (
           </select>
         </div>
         <div>
-          <label className="label">PhilHealth Number</label>
-          <input type="text" value={formData.philhealth_number} onChange={(e) => onChange('philhealth_number', e.target.value)} className="input" placeholder="XX-XXXXXXXXX-X" />
+          <label className="label">PhilHealth Identification number (PIN)</label>
+          <input 
+            type="text" 
+            value={formData.philhealth_number} 
+            onChange={(e) => onChange('philhealth_number', e.target.value)} 
+            className="input" 
+            placeholder="XX-XXXXXXXXX-X" 
+            disabled={!formData.philhealth_member}
+          />
         </div>
         <div>
           <label className="label">Category</label>
-          <select value={formData.philhealth_category} onChange={(e) => onChange('philhealth_category', e.target.value)} className="input">
+          <select 
+            value={formData.philhealth_category} 
+            onChange={(e) => onChange('philhealth_category', e.target.value)} 
+            className="input"
+            disabled={!formData.philhealth_member}
+          >
             <option value="">Select</option>
             <option value="Formal Economy">Formal Economy</option>
             <option value="Informal Economy">Informal Economy</option>
@@ -866,11 +1014,25 @@ const PatientInfoStep = ({ formData, onChange }) => (
         </div>
         <div>
           <label className="label">Household Number</label>
-          <input type="text" value={formData.facility_household_number} onChange={(e) => onChange('facility_household_number', e.target.value)} className="input" placeholder="If applicable" />
+          <input 
+            type="text" 
+            value={formData.facility_household_number} 
+            onChange={(e) => onChange('facility_household_number', e.target.value)} 
+            className="input" 
+            placeholder="If applicable" 
+            disabled={!formData.philhealth_member}
+          />
         </div>
         <div>
           <label className="label">Family Serial Number</label>
-          <input type="text" value={formData.family_serial_number} onChange={(e) => onChange('family_serial_number', e.target.value)} className="input" placeholder="If applicable" />
+          <input 
+            type="text" 
+            value={formData.family_serial_number} 
+            onChange={(e) => onChange('family_serial_number', e.target.value)} 
+            className="input" 
+            placeholder="If applicable" 
+            disabled={!formData.philhealth_member}
+          />
         </div>
       </div>
     </div>

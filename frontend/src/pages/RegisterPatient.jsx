@@ -74,7 +74,16 @@ const RegisterPatient = () => {
   ]
 
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }))
+    const fieldsToCapitalize = ['first_name', 'middle_name', 'last_name', 'suffix', 'birthplace', 'occupation', 'religion', 'indigenous', 'mother_first_name', 'mother_middle_name', 'mother_last_name', 'number_street', 'province', 'region'];
+    
+    const processedValue = fieldsToCapitalize.includes(field) ? toTitleCase(value) : value;
+
+    setFormData(prev => ({ ...prev, [field]: processedValue }))
+    
+    // Open PhilHealth consent page if "Member" is selected
+    if (field === 'philhealth_member' && value === 'Member') {
+      window.open('https://pcu.philhealth.gov.ph/consent', '_blank')
+    }
   }
 
   const handleNext = () => {
@@ -515,13 +524,14 @@ const ContactStep = ({ formData, onChange }) => (
       </div>
       
       <div>
-        <label className="label text-gray-700">PhilHealth Number</label>
+        <label className="label text-gray-700">PhilHealth Identification number (PIN)</label>
         <input
           type="text"
           value={formData.philhealth_number}
           onChange={(e) => onChange('philhealth_number', e.target.value)}
           className="input"
-          placeholder="Enter PhilHealth number"
+          placeholder="Enter PhilHealth Identification number (PIN)"
+          disabled={!formData.philhealth_member}
         />
       </div>
       
