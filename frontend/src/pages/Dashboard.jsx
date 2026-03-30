@@ -136,21 +136,21 @@ const Dashboard = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay }}
-      className="card hover:shadow-md transition-shadow"
+      className="card hover:shadow-md transition-all duration-300"
     >
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm text-gray-600 mb-1">{title}</p>
+          <p className="text-sm text-gray-600 dark:text-slate-400 mb-1 font-medium">{title}</p>
           <motion.p 
             initial={{ scale: 0.5 }}
             animate={{ scale: 1 }}
             transition={{ delay: delay + 0.2, type: "spring" }}
-            className="text-2xl font-bold text-gray-900"
+            className="text-2xl font-bold text-gray-900 dark:text-white"
           >
             {value}
           </motion.p>
         </div>
-        <div className={`w-12 h-12 ${color} rounded-lg flex items-center justify-center`}>
+        <div className={`w-12 h-12 ${color} rounded-lg flex items-center justify-center shadow-lg shadow-${color.split('-')[1]}-500/20`}>
           <Icon size={24} className="text-white" />
         </div>
       </div>
@@ -174,15 +174,15 @@ const Dashboard = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600">Overview of health system statistics</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
+          <p className="text-gray-600 dark:text-slate-400 font-medium">Overview of health system statistics</p>
         </div>
         
         <div className="flex items-center gap-3">
           <select
             value={selectedBarangay}
             onChange={(e) => setSelectedBarangay(e.target.value)}
-            className="input w-48"
+            className="input w-48 font-semibold"
           >
             <option value="">All Barangays</option>
             {PINAMUNGAHAN_BARANGAYS.map(brgy => (
@@ -235,7 +235,7 @@ const Dashboard = () => {
           transition={{ delay: 0.5 }}
           className="card"
         >
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Health Condition</h3>
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Health Condition</h3>
           <div className="h-64">
             <Pie data={healthConditionChartData} options={pieChartOptions} />
           </div>
@@ -248,7 +248,7 @@ const Dashboard = () => {
           transition={{ delay: 0.6 }}
           className="card"
         >
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Illness Types</h3>
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Illness Types</h3>
           <div className="h-64">
             <Pie data={illnessTypeChartData} options={pieChartOptions} />
           </div>
@@ -261,7 +261,7 @@ const Dashboard = () => {
           transition={{ delay: 0.7 }}
           className="card"
         >
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Barangays</h3>
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Top Barangays</h3>
           <div className="h-64">
             <Bar data={barangayChartData} options={chartOptions} />
           </div>
@@ -277,7 +277,7 @@ const Dashboard = () => {
           transition={{ delay: 0.8 }}
           className="card"
         >
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Patient Status</h3>
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Patient Status</h3>
           <div className="space-y-3">
             {[
               { status: 'Pending RHU Validation', count: stats?.byStatus['Pending RHU Validation'] || 0, color: 'yellow' },
@@ -289,10 +289,10 @@ const Dashboard = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.9 + index * 0.1 }}
-                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-800 rounded-lg transition-colors"
               >
-                <span className="text-sm font-medium text-gray-700">{item.status}</span>
-                <span className={`px-3 py-1 rounded-full text-xs font-semibold bg-${item.color}-100 text-${item.color}-800`}>
+                <span className="text-sm font-bold text-gray-700 dark:text-slate-300">{item.status}</span>
+                <span className={`px-3 py-1 rounded-full text-xs font-bold bg-${item.color}-100 dark:bg-${item.color}-900/30 text-${item.color}-800 dark:text-${item.color}-400 border border-${item.color}-200 dark:border-${item.color}-800/50`}>
                   {item.count}
                 </span>
               </motion.div>
@@ -307,33 +307,33 @@ const Dashboard = () => {
           transition={{ delay: 0.9 }}
           className="card"
         >
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">PhilHealth Coverage</h3>
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">PhilHealth Coverage</h3>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600">With PhilHealth</span>
-              <span className="font-semibold text-gray-900">
+              <span className="text-sm text-gray-600 dark:text-slate-400 font-medium">With PhilHealth</span>
+              <span className="font-bold text-gray-900 dark:text-white">
                 {stats?.philhealthCoverage?.withPhilhealth || 0}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600">Without PhilHealth</span>
-              <span className="font-semibold text-gray-900">
+              <span className="text-sm text-gray-600 dark:text-slate-400 font-medium">Without PhilHealth</span>
+              <span className="font-bold text-gray-900 dark:text-white">
                 {(stats?.philhealthCoverage?.total || 0) - (stats?.philhealthCoverage?.withPhilhealth || 0)}
               </span>
             </div>
-            <div className="pt-4 border-t border-gray-200">
+            <div className="pt-4 border-t border-gray-200 dark:border-slate-800">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-gray-700">Coverage Rate</span>
-                <span className="text-lg font-bold text-primary-600">
+                <span className="text-sm font-bold text-gray-700 dark:text-slate-300">Coverage Rate</span>
+                <span className="text-lg font-extrabold text-primary-600 dark:text-primary-400">
                   {stats?.philhealthCoverage?.percentage || 0}%
                 </span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="w-full bg-gray-200 dark:bg-slate-800 rounded-full h-2">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${stats?.philhealthCoverage?.percentage || 0}%` }}
                   transition={{ delay: 1.2, duration: 1 }}
-                  className="bg-primary-600 h-2 rounded-full"
+                  className="bg-primary-600 dark:bg-primary-500 h-2 rounded-full"
                 />
               </div>
             </div>
@@ -349,8 +349,8 @@ const Dashboard = () => {
         className="card"
       >
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-900">Recent Activity</h3>
-          <Activity size={20} className="text-gray-500" />
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white">Recent Activity</h3>
+          <Activity size={20} className="text-gray-500 dark:text-slate-400" />
         </div>
         <div className="space-y-3">
           {recentActivity.slice(0, 5).map((activity, index) => (
@@ -359,17 +359,17 @@ const Dashboard = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 1.1 + index * 0.1 }}
-              className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+              className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-800 rounded-lg transition-colors border border-transparent hover:border-gray-200 dark:hover:border-slate-700"
             >
               <div>
-                <p className="text-sm font-medium text-gray-900">
+                <p className="text-sm font-bold text-gray-900 dark:text-white">
                   {activity.first_name} {activity.last_name}
                 </p>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">
                   {activity.barangay} • {activity.activity_type.replace(/_/g, ' ')}
                 </p>
               </div>
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-gray-500 dark:text-slate-400 font-bold">
                 {new Date(activity.timestamp).toLocaleDateString()}
               </span>
             </motion.div>

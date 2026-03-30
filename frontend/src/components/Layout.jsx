@@ -9,13 +9,17 @@ import {
   Menu,
   X,
   ArrowLeft,
-  BarChart3
+  BarChart3,
+  Sun,
+  Moon
 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
+import { useTheme } from '../contexts/ThemeContext'
 import { useState, useEffect } from 'react'
 
 const Layout = () => {
   const { user, logout } = useAuth()
+  const { isDarkMode, toggleTheme } = useTheme()
   const navigate = useNavigate()
   const location = useLocation()
   const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth >= 1024) // Start open on desktop, closed on mobile
@@ -75,21 +79,21 @@ const Layout = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-950 flex transition-colors duration-300">
       {/* Sidebar */}
       <motion.aside
         initial={false}
         animate={{ x: sidebarOpen ? 0 : -280 }}
-        className={`fixed left-0 top-0 h-full w-72 bg-white border-r border-gray-200 z-40 lg:translate-x-0 lg:sticky lg:top-0 lg:h-screen lg:z-0 lg:flex lg:flex-col transition-transform duration-300`}
+        className={`fixed left-0 top-0 h-full w-72 bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-800 z-40 lg:translate-x-0 lg:sticky lg:top-0 lg:h-screen lg:z-0 lg:flex lg:flex-col transition-all duration-300`}
       >
-        <div className="h-16 flex items-center px-6 border-b border-gray-200">
+        <div className="h-16 flex items-center px-6 border-b border-gray-200 dark:border-slate-800">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 flex items-center justify-center">
               <img src="/rhu logo-Photoroom.png" alt="RHU Logo" className="w-full h-full object-contain" />
             </div>
             <div>
-              <h1 className="font-bold text-gray-900 leading-none">Pinamungahan</h1>
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider font-semibold mt-0.5">Health System</p>
+              <h1 className="font-bold text-gray-900 dark:text-white leading-none">Pinamungahan</h1>
+              <p className="text-[10px] text-gray-500 dark:text-slate-400 uppercase tracking-wider font-semibold mt-0.5">Health System</p>
             </div>
           </div>
         </div>
@@ -110,7 +114,7 @@ const Layout = () => {
                       setSidebarOpen(false)
                     }
                   }}
-                  className={`sidebar-item w-full ${isActive ? 'active' : ''}`}
+                  className={`sidebar-item w-full ${isActive ? 'active dark:bg-slate-800 dark:text-white' : 'dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white'}`}
                 >
                   <Icon size={20} />
                   <span className="font-medium">{item.label}</span>
@@ -120,16 +124,16 @@ const Layout = () => {
           </div>
         </nav>
 
-        <div className="p-4 border-t border-gray-200 mt-auto bg-white">
+        <div className="p-4 border-t border-gray-200 dark:border-slate-800 mt-auto bg-white dark:bg-slate-900 transition-colors">
           <div className="mb-4 px-2 overflow-hidden">
-            <p className="text-sm font-semibold text-gray-900 truncate" title={user?.fullName}>
+            <p className="text-sm font-semibold text-gray-900 dark:text-white truncate" title={user?.fullName}>
               {user?.fullName}
             </p>
-            <p className="text-xs text-gray-500 truncate">{getRoleDisplayName(user?.role)}</p>
+            <p className="text-xs text-gray-500 dark:text-slate-400 truncate">{getRoleDisplayName(user?.role)}</p>
           </div>
           <button
             onClick={handleLogout}
-            className="sidebar-item w-full text-red-600 hover:text-red-700 hover:bg-red-50 flex items-center gap-3 px-3 py-2 rounded-lg transition-all border border-transparent hover:border-red-100"
+            className="sidebar-item w-full text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-3 px-3 py-2 rounded-lg transition-all border border-transparent hover:border-red-100 dark:hover:border-red-900/30"
           >
             <LogOut size={18} />
             <span className="font-semibold">Logout</span>
@@ -151,12 +155,12 @@ const Layout = () => {
       {/* Main content */}
       <div className="flex-1 flex flex-col min-h-screen">
         {/* Header */}
-        <header className="h-16 flex items-center bg-white border-b border-gray-200 px-4 lg:px-6 sticky top-0 z-30">
+        <header className="h-16 flex items-center bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 px-4 lg:px-6 sticky top-0 z-30 transition-colors">
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="lg:hidden p-2 rounded-lg hover:bg-gray-100"
+                className="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 dark:text-white"
               >
                 {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
@@ -165,7 +169,7 @@ const Layout = () => {
               {location.pathname !== '/dashboard' && (
                 <button
                   onClick={handleBack}
-                  className="p-2 rounded-lg hover:bg-gray-100"
+                  className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 dark:text-white"
                   title="Go back"
                 >
                   <ArrowLeft size={20} />
@@ -173,7 +177,7 @@ const Layout = () => {
               )}
               
               <div>
-                <h2 className="text-lg font-semibold text-gray-900">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                   {location.pathname === '/dashboard' && 'Dashboard'}
                   {location.pathname === '/patients' && 'Patients'}
                   {location.pathname === '/register' && 'Register Patient'}
@@ -185,25 +189,27 @@ const Layout = () => {
               </div>
             </div>
             
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center">
-                <span className="text-primary-600 font-semibold text-sm">
-                  {user?.fullName?.charAt(0) || 'U'}
-                </span>
-              </div>
-              <div className="hidden sm:block">
-                <p className="text-sm font-medium text-gray-900">{user?.fullName}</p>
-                <p className="text-xs text-gray-500">{getRoleDisplayName(user?.role)}</p>
-              </div>
-              
-              {/* Logout button for mobile */}
+            <div className="flex items-center gap-4">
+              {/* Theme Toggle Button */}
               <button
-                onClick={handleLogout}
-                className="p-2 rounded-lg hover:bg-red-50 text-red-600 lg:hidden"
-                title="Logout"
+                onClick={toggleTheme}
+                className="p-2.5 rounded-xl bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-700 transition-all"
+                title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
               >
-                <LogOut size={20} />
+                {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
               </button>
+
+              <div className="flex items-center gap-3 pl-4 border-l border-gray-200 dark:border-slate-800">
+                <div className="w-8 h-8 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center">
+                  <span className="text-primary-600 dark:text-primary-400 font-semibold text-sm">
+                    {user?.fullName?.charAt(0) || 'U'}
+                  </span>
+                </div>
+                <div className="hidden sm:block text-right">
+                  <p className="text-sm font-medium text-gray-900 dark:text-white leading-none">{user?.fullName}</p>
+                  <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">{getRoleDisplayName(user?.role)}</p>
+                </div>
+              </div>
             </div>
           </div>
         </header>

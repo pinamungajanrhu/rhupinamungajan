@@ -25,12 +25,16 @@ import {
   Award,
   Calendar,
   Zap,
-  Check
+  Check,
+  Sun,
+  Moon
 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
+import { useTheme } from '../contexts/ThemeContext'
 
 const Landing = () => {
   const { user, loading, logout } = useAuth()
+  const { isDarkMode, toggleTheme } = useTheme()
   const navigate = useNavigate()
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [communitySlideIndex, setCommunitySlideIndex] = useState(0)
@@ -127,7 +131,7 @@ const Landing = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-950">
         <motion.div
           className="w-12 h-12 border-4 border-primary-200 border-t-primary-600 rounded-full"
           animate={{ rotate: 360 }}
@@ -138,9 +142,9 @@ const Landing = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 overflow-x-hidden selection:bg-primary-100 selection:text-primary-900">
+    <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-white overflow-x-hidden selection:bg-primary-100 selection:text-primary-900">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/70 backdrop-blur-xl border-b border-slate-100">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border-b border-slate-100 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             <div className="flex items-center gap-4">
@@ -148,45 +152,56 @@ const Landing = () => {
                 <img src="/rhu logo-Photoroom.png" alt="RHU Logo" className="w-full h-full object-contain hover:rotate-6 transition-transform duration-500" />
               </div>
               <div className="flex flex-col">
-                <span className="text-xl font-bold tracking-tight text-slate-900 leading-tight">Pinamungahan</span>
-                <span className="text-[10px] uppercase tracking-[0.25em] text-primary-600 font-bold mt-0.5">Health Care System</span>
+                <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white leading-tight">Pinamungahan</span>
+                <span className="text-[10px] uppercase tracking-[0.25em] text-primary-600 dark:text-primary-400 font-bold mt-0.5">Health Care System</span>
               </div>
             </div>
             
-            <div className="hidden md:flex items-center gap-12">
-              <a href="#features" className="text-sm font-bold text-slate-500 hover:text-primary-600 transition-all relative group">
-                Service List
-                <span className="absolute -bottom-1.5 left-0 w-0 h-0.5 bg-primary-600 transition-all group-hover:w-full rounded-full"></span>
-              </a>
-              <a href="#community" className="text-sm font-bold text-slate-500 hover:text-primary-600 transition-all relative group">
-                Community
-                <span className="absolute -bottom-1.5 left-0 w-0 h-0.5 bg-primary-600 transition-all group-hover:w-full rounded-full"></span>
-              </a>
-              {user ? (
-                <div className="flex items-center gap-6 pl-8 border-l border-slate-200">
-                  <div className="flex flex-col items-end">
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Welcome back,</span>
-                    <span className="text-sm font-bold text-slate-900">{user.fullName.split(' ')[0]}</span>
+            <div className="flex items-center gap-6">
+              <div className="hidden md:flex items-center gap-12">
+                <a href="#features" className="text-sm font-bold text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400 transition-all relative group">
+                  Service List
+                  <span className="absolute -bottom-1.5 left-0 w-0 h-0.5 bg-primary-600 transition-all group-hover:w-full rounded-full"></span>
+                </a>
+                <a href="#community" className="text-sm font-bold text-slate-500 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400 transition-all relative group">
+                  Community
+                  <span className="absolute -bottom-1.5 left-0 w-0 h-0.5 bg-primary-600 transition-all group-hover:w-full rounded-full"></span>
+                </a>
+                {user ? (
+                  <div className="flex items-center gap-6 pl-8 border-l border-slate-200 dark:border-slate-800">
+                    <div className="flex flex-col items-end">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Welcome back,</span>
+                      <span className="text-sm font-bold text-slate-900 dark:text-white">{user.fullName.split(' ')[0]}</span>
+                    </div>
+                    <motion.button
+                      whileHover={{ scale: 1.03, y: -1 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={handleDashboard}
+                      className="px-6 py-2.5 bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-sm font-bold rounded-xl shadow-xl shadow-slate-200 dark:shadow-none hover:bg-slate-800 dark:hover:bg-slate-100 transition-all"
+                    >
+                      Dashboard
+                    </motion.button>
                   </div>
+                ) : (
                   <motion.button
                     whileHover={{ scale: 1.03, y: -1 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={handleDashboard}
-                    className="px-6 py-2.5 bg-slate-900 text-white text-sm font-bold rounded-xl shadow-xl shadow-slate-200 hover:bg-slate-800 transition-all"
+                    onClick={handleLogin}
+                    className="px-8 py-3 bg-primary-600 text-white text-sm font-bold rounded-xl shadow-xl shadow-primary-200 dark:shadow-none hover:bg-primary-700 transition-all"
                   >
-                    Dashboard
+                    Sign In
                   </motion.button>
-                </div>
-              ) : (
-                <motion.button
-                  whileHover={{ scale: 1.03, y: -1 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleLogin}
-                  className="px-8 py-3 bg-primary-600 text-white text-sm font-bold rounded-xl shadow-xl shadow-primary-200 hover:bg-primary-700 transition-all"
-                >
-                  Sign In
-                </motion.button>
-              )}
+                )}
+              </div>
+
+              {/* Theme Toggle */}
+              <button
+                onClick={toggleTheme}
+                className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all"
+                title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              >
+                {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+              </button>
             </div>
           </div>
         </div>
@@ -273,20 +288,20 @@ const Landing = () => {
       </section>
 
       {/* Community Section - Slideshow with Services Intro */}
-      <section id="community" className="relative py-32 bg-slate-950">
+      <section id="community" className="relative py-32 bg-slate-50 dark:bg-slate-950">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full relative z-10">
           {/* Header */}
           <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-16 gap-10">
             <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/10 border border-white/20 mb-6">
-                <Users size={16} className="text-primary-400" />
-                <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/90">Our Community</span>
+              <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-primary-500/10 dark:bg-white/10 border border-primary-500/20 dark:border-white/20 mb-6">
+                <Users size={16} className="text-primary-600 dark:text-primary-400" />
+                <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-900 dark:text-white/90">Our Community</span>
               </div>
-              <h3 className="text-5xl lg:text-7xl font-bold text-white leading-tight tracking-tighter">
-                Serving with <br /> <span className="text-primary-400 underline decoration-8 decoration-primary-500/50 underline-offset-8">Excellence.</span>
+              <h3 className="text-5xl lg:text-7xl font-bold text-slate-900 dark:text-white leading-tight tracking-tighter">
+                Serving with <br /> <span className="text-primary-600 dark:text-primary-400 underline decoration-8 decoration-primary-500/50 underline-offset-8">Excellence.</span>
               </h3>
             </div>
-            <p className="text-xl text-white/70 max-w-sm font-semibold leading-relaxed">
+            <p className="text-xl text-slate-600 dark:text-white/70 max-w-sm font-semibold leading-relaxed">
               Real moments from our daily operations, showcasing our commitment to 
               Pinamungahan's health and wellbeing.
             </p>
@@ -295,7 +310,7 @@ const Landing = () => {
           {/* Slideshow Container */}
           <div className="relative">
             {/* Main Slideshow Image */}
-            <div className="relative h-[500px] lg:h-[600px] rounded-[3rem] overflow-hidden shadow-2xl border-4 border-white/10">
+            <div className="relative h-[500px] lg:h-[600px] rounded-[3rem] overflow-hidden shadow-2xl border-4 border-slate-200 dark:border-white/10">
               {communityImages.map((item, index) => (
                 <motion.div
                   key={index}
@@ -374,45 +389,45 @@ const Landing = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
             <motion.div 
               whileHover={{ y: -5 }}
-              className="bg-white/5 rounded-2xl p-8 border border-white/10"
+              className="bg-white dark:bg-white/5 rounded-2xl p-8 border border-slate-200 dark:border-white/10 shadow-sm dark:shadow-none"
             >
-              <div className="w-12 h-12 bg-primary-600/20 rounded-xl flex items-center justify-center mb-4">
-                <MapPin className="text-primary-400" size={24} />
+              <div className="w-12 h-12 bg-primary-100 dark:bg-primary-600/20 rounded-xl flex items-center justify-center mb-4">
+                <MapPin className="text-primary-600 dark:text-primary-400" size={24} />
               </div>
-              <h4 className="text-xl font-bold text-white mb-2">26 Barangays</h4>
-              <p className="text-white/60 text-sm">Serving the entire municipality with accessible healthcare</p>
+              <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-2">26 Barangays</h4>
+              <p className="text-slate-500 dark:text-white/60 text-sm font-medium">Serving the entire municipality with accessible healthcare</p>
             </motion.div>
             <motion.div 
               whileHover={{ y: -5 }}
-              className="bg-white/5 rounded-2xl p-8 border border-white/10"
+              className="bg-white dark:bg-white/5 rounded-2xl p-8 border border-slate-200 dark:border-white/10 shadow-sm dark:shadow-none"
             >
-              <div className="w-12 h-12 bg-primary-600/20 rounded-xl flex items-center justify-center mb-4">
-                <Clock className="text-primary-400" size={24} />
+              <div className="w-12 h-12 bg-primary-100 dark:bg-primary-600/20 rounded-xl flex items-center justify-center mb-4">
+                <Clock className="text-primary-600 dark:text-primary-400" size={24} />
               </div>
-              <h4 className="text-xl font-bold text-white mb-2">Mon - Fri</h4>
-              <p className="text-white/60 text-sm">8:00 AM - 5:00 PM regular operating hours</p>
+              <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Mon - Fri</h4>
+              <p className="text-slate-500 dark:text-white/60 text-sm font-medium">8:00 AM - 5:00 PM regular operating hours</p>
             </motion.div>
             <motion.div 
               whileHover={{ y: -5 }}
-              className="bg-white/5 rounded-2xl p-8 border border-white/10"
+              className="bg-white dark:bg-white/5 rounded-2xl p-8 border border-slate-200 dark:border-white/10 shadow-sm dark:shadow-none"
             >
-              <div className="w-12 h-12 bg-primary-600/20 rounded-xl flex items-center justify-center mb-4">
-                <Shield className="text-primary-400" size={24} />
+              <div className="w-12 h-12 bg-primary-100 dark:bg-primary-600/20 rounded-xl flex items-center justify-center mb-4">
+                <Shield className="text-primary-600 dark:text-primary-400" size={24} />
               </div>
-              <h4 className="text-xl font-bold text-white mb-2">DOH Accredited</h4>
-              <p className="text-white/60 text-sm">Licensed and certified primary care facility</p>
+              <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-2">DOH Accredited</h4>
+              <p className="text-slate-500 dark:text-white/60 text-sm font-medium">Licensed and certified primary care facility</p>
             </motion.div>
           </div>
         </div>
       </section>
 
       {/* Services Section - Facility Services */}
-      <section id="features" className="py-32 bg-slate-900 border-y border-slate-800">
+      <section id="features" className="py-32 bg-white dark:bg-slate-900 border-y border-slate-100 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-[11px] font-bold text-primary-400 uppercase tracking-[0.3em] mb-6">Our Facility</h2>
-            <h3 className="text-5xl lg:text-7xl font-bold text-white mb-10 tracking-tighter leading-none">Medical & Laboratory <br /> Services.</h3>
-            <p className="text-xl text-white/70 font-semibold leading-relaxed">
+            <h2 className="text-[11px] font-bold text-primary-600 dark:text-primary-400 uppercase tracking-[0.3em] mb-6">Our Facility</h2>
+            <h3 className="text-5xl lg:text-7xl font-bold text-slate-900 dark:text-white mb-10 tracking-tighter leading-none">Medical & Laboratory <br /> Services.</h3>
+            <p className="text-xl text-slate-600 dark:text-white/70 font-semibold leading-relaxed">
               Comprehensive healthcare services available at Pinamungajan RHU.
             </p>
           </div>
@@ -426,25 +441,25 @@ const Landing = () => {
               viewport={{ once: true }}
               onMouseEnter={() => setHoveredService('medical')}
               onMouseLeave={() => setHoveredService(null)}
-              className="relative bg-gradient-to-br from-slate-900 to-slate-950 rounded-[2.5rem] p-10 border border-white/10 overflow-hidden cursor-pointer transition-all duration-500 hover:border-primary-500/30"
+              className="relative bg-slate-50 dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-950 rounded-[2.5rem] p-10 border border-slate-200 dark:border-white/10 overflow-hidden cursor-pointer transition-all duration-500 hover:border-primary-500/30"
             >
               {/* Background glow */}
               <div className="absolute top-0 right-0 w-64 h-64 bg-primary-500/5 rounded-full blur-3xl"></div>
               
               <div className="relative flex items-center gap-4">
-                <div className="w-14 h-14 bg-gradient-to-br from-primary-500/20 to-primary-600/10 rounded-2xl flex items-center justify-center border border-primary-500/20">
-                  <Stethoscope size={28} className="text-primary-400" />
+                <div className="w-14 h-14 bg-primary-100 dark:bg-gradient-to-br dark:from-primary-500/20 dark:to-primary-600/10 rounded-2xl flex items-center justify-center border border-primary-200 dark:border-primary-500/20">
+                  <Stethoscope size={28} className="text-primary-600 dark:text-primary-400" />
                 </div>
                 <div className="flex-1">
-                  <h4 className="text-2xl font-bold text-white">Medical Services</h4>
-                  <span className="text-[10px] text-primary-400 uppercase tracking-wider font-semibold">Primary Care</span>
+                  <h4 className="text-2xl font-bold text-slate-900 dark:text-white">Medical Services</h4>
+                  <span className="text-[10px] text-primary-600 dark:text-primary-400 uppercase tracking-wider font-bold">Primary Care</span>
                 </div>
                 <motion.div
                   animate={{ rotate: hoveredService === 'medical' ? 180 : 0 }}
                   transition={{ duration: 0.3 }}
                   className="w-8 h-8 rounded-full bg-primary-500/10 flex items-center justify-center"
                 >
-                  <ChevronDown size={16} className="text-primary-400" />
+                  <ChevronDown size={16} className="text-primary-600 dark:text-primary-400" />
                 </motion.div>
               </div>
               
@@ -474,10 +489,10 @@ const Landing = () => {
                   <motion.li 
                     key={i} 
                     whileHover={{ x: 4 }}
-                    className="flex items-center gap-2 text-white/70 text-xs group cursor-default"
+                    className="flex items-center gap-2 text-slate-600 dark:text-white/70 text-xs group cursor-default"
                   >
-                    <span className="w-1 h-1 rounded-full bg-primary-500/50 group-hover:bg-primary-400 transition-colors"></span>
-                    <span className="group-hover:text-white/90 transition-colors">{item}</span>
+                    <span className="w-1 h-1 rounded-full bg-primary-500/50 group-hover:bg-primary-600 dark:group-hover:bg-primary-400 transition-colors"></span>
+                    <span className="group-hover:text-slate-900 dark:group-hover:text-white/90 transition-colors font-medium">{item}</span>
                   </motion.li>
                 ))}
               </ul>
@@ -485,7 +500,7 @@ const Landing = () => {
               {/* Updated as of 2026 - Badge Style */}
               <div className="my-3 flex items-center gap-3">
                 <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary-500/30 to-transparent"></div>
-                <span className="px-3 py-1 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-xs font-semibold">Updated as of 2026</span>
+                <span className="px-3 py-1 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-600 dark:text-primary-400 text-xs font-bold">Updated as of 2026</span>
                 <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary-500/30 to-transparent"></div>
               </div>
 
@@ -504,25 +519,25 @@ const Landing = () => {
                   <motion.li 
                     key={i} 
                     whileHover={{ x: 4 }}
-                    className="flex items-center gap-2 text-white/70 text-xs group cursor-default"
+                    className="flex items-center gap-2 text-slate-600 dark:text-white/70 text-xs group cursor-default"
                   >
-                    <span className="w-1 h-1 rounded-full bg-primary-500/50 group-hover:bg-primary-400 transition-colors"></span>
-                    <span className="group-hover:text-white/90 transition-colors">{item}</span>
+                    <span className="w-1 h-1 rounded-full bg-primary-500/50 group-hover:bg-primary-600 dark:group-hover:bg-primary-400 transition-colors"></span>
+                    <span className="group-hover:text-slate-900 dark:group-hover:text-white/90 transition-colors font-medium">{item}</span>
                   </motion.li>
                 ))}
-                <li className="flex items-center gap-2 text-white/70 text-xs mt-2">
+                <li className="flex items-center gap-2 text-slate-600 dark:text-white/70 text-xs mt-2 font-bold">
                   <span className="w-1 h-1 rounded-full bg-primary-500/50"></span>
-                  <span className="font-medium text-white/80">Pre-marriage Counseling Fee:</span>
+                  <span className="text-slate-900 dark:text-white/80">Pre-marriage Counseling Fee:</span>
                 </li>
-                <li className="flex items-center gap-2 text-white/50 text-xs ml-4">
+                <li className="flex items-center gap-2 text-slate-500 dark:text-white/50 text-xs ml-4 font-medium">
                   <span className="text-primary-500/40 text-[10px]">◦</span>
                   <span>Residents</span>
                 </li>
-                <li className="flex items-center gap-2 text-white/50 text-xs ml-4">
+                <li className="flex items-center gap-2 text-slate-500 dark:text-white/50 text-xs ml-4 font-medium">
                   <span className="text-primary-500/40 text-[10px]">◦</span>
                   <span>Non-residents</span>
                 </li>
-                <li className="flex items-center gap-2 text-white/50 text-xs ml-4">
+                <li className="flex items-center gap-2 text-slate-500 dark:text-white/50 text-xs ml-4 font-medium">
                   <span className="text-primary-500/40 text-[10px]">◦</span>
                   <span>Foreigner/Special</span>
                 </li>
@@ -539,25 +554,25 @@ const Landing = () => {
               transition={{ delay: 0.1 }}
               onMouseEnter={() => setHoveredService('lab')}
               onMouseLeave={() => setHoveredService(null)}
-              className="relative bg-gradient-to-br from-slate-900 to-slate-950 rounded-[2.5rem] p-10 border border-white/10 overflow-hidden cursor-pointer transition-all duration-500 hover:border-rose-500/30"
+              className="relative bg-slate-50 dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-950 rounded-[2.5rem] p-10 border border-slate-200 dark:border-white/10 overflow-hidden cursor-pointer transition-all duration-500 hover:border-rose-500/30"
             >
               {/* Background glow */}
               <div className="absolute top-0 right-0 w-64 h-64 bg-rose-500/5 rounded-full blur-3xl"></div>
               
               <div className="relative flex items-center gap-4">
-                <div className="w-14 h-14 bg-gradient-to-br from-rose-500/20 to-rose-600/10 rounded-2xl flex items-center justify-center border border-rose-500/20">
-                  <Activity size={28} className="text-rose-400" />
+                <div className="w-14 h-14 bg-rose-100 dark:bg-gradient-to-br dark:from-rose-500/20 dark:to-rose-600/10 rounded-2xl flex items-center justify-center border border-rose-200 dark:border-rose-500/20">
+                  <Activity size={28} className="text-rose-600 dark:text-rose-400" />
                 </div>
                 <div className="flex-1">
-                  <h4 className="text-2xl font-bold text-white">Laboratory Services</h4>
-                  <span className="text-[10px] text-rose-400 uppercase tracking-wider font-semibold">Diagnostics</span>
+                  <h4 className="text-2xl font-bold text-slate-900 dark:text-white">Laboratory Services</h4>
+                  <span className="text-[10px] text-rose-600 dark:text-rose-400 uppercase tracking-wider font-bold">Diagnostics</span>
                 </div>
                 <motion.div
                   animate={{ rotate: hoveredService === 'lab' ? 180 : 0 }}
                   transition={{ duration: 0.3 }}
                   className="w-8 h-8 rounded-full bg-rose-500/10 flex items-center justify-center"
                 >
-                  <ChevronDown size={16} className="text-rose-400" />
+                  <ChevronDown size={16} className="text-rose-600 dark:text-rose-400" />
                 </motion.div>
               </div>
               
@@ -576,16 +591,16 @@ const Landing = () => {
               <div className="mb-3">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-0.5 h-3 bg-rose-500/50 rounded-full"></div>
-                  <h5 className="text-rose-300 font-semibold text-xs">Hematology</h5>
+                  <h5 className="text-rose-600 dark:text-rose-300 font-bold text-xs">Hematology</h5>
                 </div>
                 <ul className="space-y-0.5 ml-2 flex gap-4">
-                  <li className="flex items-center gap-1.5 text-white/70 text-xs group">
+                  <li className="flex items-center gap-1.5 text-slate-600 dark:text-white/70 text-xs group">
                     <span className="text-rose-500/40 text-[10px] font-mono">a.</span>
-                    <span className="group-hover:text-white/90 transition-colors">Complete Blood Count (CBC)</span>
+                    <span className="group-hover:text-slate-900 dark:group-hover:text-white/90 transition-colors font-medium">Complete Blood Count (CBC)</span>
                   </li>
-                  <li className="flex items-center gap-1.5 text-white/70 text-xs group">
+                  <li className="flex items-center gap-1.5 text-slate-600 dark:text-white/70 text-xs group">
                     <span className="text-rose-500/40 text-[10px] font-mono">b.</span>
-                    <span className="group-hover:text-white/90 transition-colors">Blood Typing</span>
+                    <span className="group-hover:text-slate-900 dark:group-hover:text-white/90 transition-colors font-medium">Blood Typing</span>
                   </li>
                 </ul>
               </div>
@@ -594,7 +609,7 @@ const Landing = () => {
               <div className="mb-3">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-0.5 h-3 bg-rose-500/50 rounded-full"></div>
-                  <h5 className="text-rose-300 font-semibold text-xs">Blood Chemistry Tests</h5>
+                  <h5 className="text-rose-600 dark:text-rose-300 font-bold text-xs">Blood Chemistry Tests</h5>
                 </div>
                 <ul className="space-y-0.5 ml-2 grid grid-cols-2 gap-x-4">
                   {[
@@ -612,9 +627,9 @@ const Landing = () => {
                     { letter: 'l', text: 'Random Blood Sugar' },
                     { letter: 'm', text: 'Sodium' }
                   ].map((item, i) => (
-                    <li key={i} className="flex items-center gap-1.5 text-white/70 text-xs group">
+                    <li key={i} className="flex items-center gap-1.5 text-slate-600 dark:text-white/70 text-xs group">
                       <span className="text-rose-500/40 text-[10px] font-mono w-3">{item.letter}.</span>
-                      <span className="group-hover:text-white/90 transition-colors truncate">{item.text}</span>
+                      <span className="group-hover:text-slate-900 dark:group-hover:text-white/90 transition-colors truncate font-medium">{item.text}</span>
                     </li>
                   ))}
                 </ul>
@@ -623,7 +638,7 @@ const Landing = () => {
               {/* Updated As of 2026 - Badge Style */}
               <div className="my-3 flex items-center gap-3">
                 <div className="h-px flex-1 bg-gradient-to-r from-transparent via-rose-500/30 to-transparent"></div>
-                <span className="px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-semibold">Updated As of 2026</span>
+                <span className="px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-bold">Updated As of 2026</span>
                 <div className="h-px flex-1 bg-gradient-to-r from-transparent via-rose-500/30 to-transparent"></div>
               </div>
 
@@ -631,7 +646,7 @@ const Landing = () => {
               <div className="mb-3">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-0.5 h-3 bg-rose-500/50 rounded-full"></div>
-                  <h5 className="text-rose-300 font-semibold text-xs">Clinical Microscopy Test</h5>
+                  <h5 className="text-rose-600 dark:text-rose-300 font-bold text-xs">Clinical Microscopy Test</h5>
                 </div>
                 <ul className="space-y-0.5 ml-2 flex flex-wrap gap-x-4">
                   {[
@@ -640,9 +655,9 @@ const Landing = () => {
                     { letter: 'c', text: 'Fecal Occult Blood Test' },
                     { letter: 'd', text: 'Urinalysis' }
                   ].map((item, i) => (
-                    <li key={i} className="flex items-center gap-1.5 text-white/70 text-xs group">
+                    <li key={i} className="flex items-center gap-1.5 text-slate-600 dark:text-white/70 text-xs group">
                       <span className="text-rose-500/40 text-[10px] font-mono w-3">{item.letter}.</span>
-                      <span className="group-hover:text-white/90 transition-colors">{item.text}</span>
+                      <span className="group-hover:text-slate-900 dark:group-hover:text-white/90 transition-colors font-medium">{item.text}</span>
                     </li>
                   ))}
                 </ul>
@@ -652,7 +667,7 @@ const Landing = () => {
               <div>
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-0.5 h-3 bg-rose-500/50 rounded-full"></div>
-                  <h5 className="text-rose-300 font-semibold text-xs">Immunologic Test</h5>
+                  <h5 className="text-rose-600 dark:text-rose-300 font-bold text-xs">Immunologic Test</h5>
                 </div>
                 <ul className="space-y-0.5 ml-2 grid grid-cols-2 gap-x-3">
                   {[
@@ -672,13 +687,13 @@ const Landing = () => {
                     { letter: 'n', text: 'TSH' },
                     { letter: 'o', text: 'Typhi DOT IgG/IgM' }
                   ].map((item, i) => (
-                    <li key={i} className="flex items-center gap-1.5 text-white/70 text-xs group">
+                    <li key={i} className="flex items-center gap-1.5 text-slate-600 dark:text-white/70 text-xs group">
                       <span className="text-rose-500/40 text-[10px] font-mono w-3">{item.letter}.</span>
-                      <span className="group-hover:text-white/90 transition-colors truncate" title={item.text === 'HIV Testing*' ? 'For prenatal care and employment purposes only' : item.text}>{item.text}</span>
+                      <span className="group-hover:text-slate-900 dark:group-hover:text-white/90 transition-colors truncate font-medium" title={item.text === 'HIV Testing*' ? 'For prenatal care and employment purposes only' : item.text}>{item.text}</span>
                     </li>
                   ))}
                 </ul>
-                <p className="text-white/30 text-[10px] mt-1 ml-2 italic">*HIV Testing - for prenatal care and employment purposes only</p>
+                <p className="text-slate-400 dark:text-white/30 text-[10px] mt-1 ml-2 italic font-medium">*HIV Testing - for prenatal care and employment purposes only</p>
               </div>
               </div>
               </motion.div>
@@ -688,7 +703,7 @@ const Landing = () => {
       </section>
 
       {/* Mission & Vision Section */}
-      <section className="py-32 bg-slate-950">
+      <section className="py-32 bg-slate-50 dark:bg-slate-950">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16">
             {/* Mission */}
@@ -697,18 +712,18 @@ const Landing = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="bg-slate-900 rounded-[3rem] p-12 lg:p-16 relative overflow-hidden border border-white/10"
+              className="bg-white dark:bg-slate-900 rounded-[3rem] p-12 lg:p-16 relative overflow-hidden border border-slate-200 dark:border-white/10 shadow-sm"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-primary-500/10 rounded-full blur-3xl"></div>
               <div className="relative z-10">
-                <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-primary-500/20 border border-primary-500/30 mb-8">
-                  <HeartPulse size={16} className="text-primary-400" />
-                  <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-primary-400">Our Mission</span>
+                <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-primary-500/10 dark:bg-primary-500/20 border border-primary-500/20 dark:border-primary-500/30 mb-8">
+                  <HeartPulse size={16} className="text-primary-600 dark:text-primary-400" />
+                  <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-primary-600 dark:text-primary-400">Our Mission</span>
                 </div>
-                <h3 className="text-4xl lg:text-5xl font-bold text-white mb-8 leading-tight tracking-tight">
+                <h3 className="text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white mb-8 leading-tight tracking-tight">
                   Quality Care for Mothers & Newborns
                 </h3>
-                <p className="text-xl text-white/70 leading-relaxed font-medium">
+                <p className="text-xl text-slate-600 dark:text-white/70 leading-relaxed font-semibold">
                   To provide quality maternal and neonatal services to all pregnant mothers and newborn babies through a service-oriented, passionate and efficient health workers.
                 </p>
               </div>
@@ -720,18 +735,18 @@ const Landing = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="bg-slate-900 rounded-[3rem] p-12 lg:p-16 relative overflow-hidden border border-white/10"
+              className="bg-white dark:bg-slate-900 rounded-[3rem] p-12 lg:p-16 relative overflow-hidden border border-slate-200 dark:border-white/10 shadow-sm"
             >
               <div className="absolute top-0 left-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl"></div>
               <div className="relative z-10">
-                <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-blue-500/20 border border-blue-500/30 mb-8">
-                  <Award size={16} className="text-blue-400" />
-                  <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-blue-400">Our Vision</span>
+                <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-blue-500/10 dark:bg-blue-500/20 border border-blue-500/20 dark:border-blue-500/30 mb-8">
+                  <Award size={16} className="text-blue-600 dark:text-blue-400" />
+                  <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-blue-600 dark:text-blue-400">Our Vision</span>
                 </div>
-                <h3 className="text-4xl lg:text-5xl font-bold text-white mb-8 leading-tight tracking-tight">
+                <h3 className="text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white mb-8 leading-tight tracking-tight">
                   DOH & PhilHealth Accredited Facility
                 </h3>
-                <p className="text-xl text-white/70 leading-relaxed font-medium">
+                <p className="text-xl text-slate-600 dark:text-white/70 leading-relaxed font-semibold">
                   Pinamungajan Primary Care Facility is a DOH and PhilHealth Accredited, mother and child-friendly birthing facility that caters to all low-risk pregnant mothers through normal deliveries which are attended only by competent and skilled (BEMONC-trained) birth attendants.
                 </p>
               </div>
@@ -740,8 +755,8 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* Footer - Dark Theme */}
-      <footer className="py-16 bg-slate-950 border-t border-slate-800">
+      {/* Footer */}
+      <footer className="py-16 bg-white dark:bg-slate-950 border-t border-slate-100 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-12">
             <div className="flex items-center gap-5">
@@ -749,23 +764,23 @@ const Landing = () => {
                 <img src="/rhu logo-Photoroom.png" alt="RHU Logo" className="w-full h-full object-contain" />
               </div>
               <div className="flex flex-col">
-                <span className="text-2xl font-bold tracking-tighter text-white leading-none">Pinamungahan</span>
-                <span className="text-[10px] uppercase tracking-[0.3em] text-primary-400 font-bold mt-1">Health Care System</span>
+                <span className="text-2xl font-bold tracking-tighter text-slate-900 dark:text-white leading-none">Pinamungahan</span>
+                <span className="text-[10px] uppercase tracking-[0.3em] text-primary-600 dark:text-primary-400 font-bold mt-1">Health Care System</span>
               </div>
             </div>
             
-            <div className="flex gap-16 text-[11px] font-bold text-white/50 uppercase tracking-[0.2em]">
-              <a href="#" className="hover:text-primary-400 transition-all">Privacy</a>
-              <a href="#" className="hover:text-primary-400 transition-all">Terms</a>
-              <a href="#" className="hover:text-primary-400 transition-all">Help Center</a>
+            <div className="flex gap-16 text-[11px] font-bold text-slate-400 dark:text-white/50 uppercase tracking-[0.2em]">
+              <a href="#" className="hover:text-primary-600 dark:hover:text-primary-400 transition-all">Privacy</a>
+              <a href="#" className="hover:text-primary-600 dark:hover:text-primary-400 transition-all">Terms</a>
+              <a href="#" className="hover:text-primary-600 dark:hover:text-primary-400 transition-all">Help Center</a>
             </div>
             
             <div className="flex flex-col items-end gap-3">
-              <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-primary-400 bg-primary-900/30 px-3 py-1.5 rounded-full border border-primary-500/30">
+              <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/30 px-3 py-1.5 rounded-full border border-primary-200 dark:border-primary-500/30">
                 <div className="w-2 h-2 bg-primary-500 rounded-full animate-pulse"></div>
                 Systems Active
               </div>
-              <p className="text-xs text-white/50 font-semibold tracking-tight">
+              <p className="text-xs text-slate-400 dark:text-white/50 font-bold tracking-tight">
                 &copy; 2026 RHU Pinamungahan.
               </p>
             </div>
