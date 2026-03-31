@@ -12,11 +12,14 @@ import {
   Shield,
   MoreVertical,
   Download,
-  FileText
+  FileText,
+  CheckCircle2,
+  RefreshCw
 } from 'lucide-react'
 import axios from 'axios'
+import { toast } from 'react-hot-toast'
 import { useAuth } from '../contexts/AuthContext'
-import { exportPatientsToXML, downloadXML } from '../utils/xmlExport'
+import { exportToExcel, exportToPDF } from '../utils/exportUtils'
 import { PINAMUNGAHAN_BARANGAYS } from '../constants'
 
 const Patients = () => {
@@ -56,6 +59,8 @@ const Patients = () => {
     switch (status) {
       case 'Pending RHU Validation':
         return 'bg-yellow-100 text-yellow-800'
+      case 'Awaiting Assessment':
+        return 'bg-orange-100 text-orange-800'
       case 'Ready for Doctor Consultation':
         return 'bg-blue-100 text-blue-800'
       case 'Completed':
@@ -88,25 +93,63 @@ const Patients = () => {
     navigate(`/consultation/${patientId}`)
   }
 
-  const handleExportXML = () => {
-    const xml = exportPatientsToXML(patients, true, true)
-    const timestamp = new Date().toISOString().split('T')[0]
-    downloadXML(xml, `patients_export_${timestamp}.xml`)
-  }
+  const formatPatientForExport = (patient) => ({
+    "First Name": patient.first_name,
+    "Last Name": patient.last_name,
+    "Birthdate": new Date(patient.birthdate).toLocaleDateString(),
+    "Mobile": patient.mobile || 'N/A',
+    "Barangay": patient.barangay,
+    "PhilHealth": patient.philhealth_number || 'N/A',
+    "Status": patient.status
+  });
 
-  const handleExportSingleXML = async (patientId) => {
-    try {
-      const { exportSinglePatientToXML } = await import('../utils/xmlExport')
-      const xml = await exportSinglePatientToXML(patientId, axios)
-      const patient = patients.find(p => p.id === patientId)
-      const timestamp = new Date().toISOString().split('T')[0]
-      const filename = `patient_${patient?.first_name}_${patient?.last_name}_${timestamp}.xml`
-      downloadXML(xml, filename)
-    } catch (error) {
-      console.error('Error exporting patient:', error)
-      alert('Failed to export patient data')
+  const handleExportExcel = () => {
+    const data = patients.map(formatPatientForExport);
+    const timestamp = new Date().toISOString().split('T')[0];
+    exportToExcel(data, `patients_masterlist_${timestamp}`);
+    toast.success('Excel exported successfully');
+  };
+
+  const handleExportPDFList = () => {
+    const headers = ["Name", "Birthdate", "Mobile", "Barangay", "PhilHealth", "Status"];
+    const data = patients.map(p => [
+      `${p.first_name} ${p.last_name}`,
+      new Date(p.birthdate).toLocaleDateString(),
+      p.mobile || 'N/A',
+      p.barangay,
+      p.philhealth_number || 'N/A',
+      p.status
+    ]);
+    const timestamp = new Date().toISOString().split('T')[0];
+    exportToPDF(headers, data, `patients_masterlist_${timestamp}`, "Patients Masterlist Report");
+    toast.success('PDF exported successfully');
+  };
+
+  const handleConfirmPatient = async (patientId) => {
+    if (window.confirm('Confirm this patient for the masterlist? This marks them as Awaiting Assessment.')) {
+      try {
+        await axios.put(`/api/residents/${patientId}`, { status: 'Awaiting Assessment' });
+        toast.success('Patient confirmed successfully');
+        fetchPatients();
+      } catch (error) {
+        console.error('Error confirming patient:', error);
+        toast.error('Failed to confirm patient');
+      }
     }
-  }
+  };
+
+  const handleNewConsultation = async (patientId) => {
+    if (window.confirm('Start a new encounter? This resets the patient status for a new assessment.')) {
+      try {
+        await axios.put(`/api/residents/${patientId}`, { status: 'Awaiting Assessment' });
+        toast.success('Patient queued for new consultation');
+        fetchPatients();
+      } catch (error) {
+        console.error('Error starting new consultation:', error);
+        toast.error('Failed to queue patient');
+      }
+    }
+  };
 
   if (loading) {
     return (
@@ -133,15 +176,26 @@ const Patients = () => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={handleExportXML}
+            onClick={handleExportExcel}
             className="btn-secondary flex items-center gap-2"
-            title="Export all patients to XML"
+            title="Export patients to Excel"
+          >
+            <Download size={20} />
+            Export Excel
+          </motion.button>
+
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleExportPDFList}
+            className="btn-secondary text-primary-600 border-primary-200 hover:bg-primary-50 flex items-center gap-2"
+            title="Export patients to PDF"
           >
             <FileText size={20} />
-            Export XML
+            Export PDF
           </motion.button>
           
-          {user?.role === 'barangay' && (
+          {(user?.role === 'barangay' || user?.role === 'rhu') && (
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -184,7 +238,8 @@ const Patients = () => {
               className="input"
             >
               <option value="">All Status</option>
-              <option value="Pending RHU Validation">Pending RHU Validation</option>
+              <option value="Pending RHU Validation">Pending RHU Validation (Review Queue)</option>
+              <option value="Awaiting Assessment">Awaiting Assessment</option>
               <option value="Ready for Doctor Consultation">Ready for Doctor Consultation</option>
               <option value="Completed">Completed</option>
             </select>
@@ -297,17 +352,7 @@ const Patients = () => {
                           <Eye size={16} />
                         </motion.button>
                         
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          onClick={() => handleExportSingleXML(patient.id)}
-                          className="p-2 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-lg"
-                          title="Export Patient to XML"
-                        >
-                          <Download size={16} />
-                        </motion.button>
-                        
-                        {user?.role === 'barangay' && (
+                        {(user?.role === 'barangay' || user?.role === 'rhu') && (
                           <motion.button
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
@@ -318,8 +363,20 @@ const Patients = () => {
                             <Edit size={16} />
                           </motion.button>
                         )}
-                        
+
                         {user?.role === 'rhu' && patient.status === 'Pending RHU Validation' && (
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={() => handleConfirmPatient(patient.id)}
+                            className="p-2 text-gray-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg"
+                            title="Confirm Patient"
+                          >
+                            <CheckCircle2 size={16} />
+                          </motion.button>
+                        )}
+                        
+                        {user?.role === 'rhu' && patient.status === 'Awaiting Assessment' && (
                           <motion.button
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
@@ -328,6 +385,18 @@ const Patients = () => {
                             title="Fill Assessment"
                           >
                             <Edit size={16} />
+                          </motion.button>
+                        )}
+
+                        {user?.role === 'rhu' && patient.status === 'Completed' && (
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={() => handleNewConsultation(patient.id)}
+                            className="p-2 text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-lg"
+                            title="New Consultation"
+                          >
+                            <RefreshCw size={16} />
                           </motion.button>
                         )}
                         

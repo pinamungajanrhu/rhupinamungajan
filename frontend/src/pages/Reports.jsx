@@ -10,7 +10,9 @@ import {
   Activity
 } from 'lucide-react'
 import axios from 'axios'
+import { toast } from 'react-hot-toast'
 import { useAuth } from '../contexts/AuthContext'
+import { exportToExcel, exportToPDF } from '../utils/exportUtils'
 
 const Reports = () => {
   const { user } = useAuth()
@@ -37,14 +39,55 @@ const Reports = () => {
     }
   }
 
-  const handleExportCSV = () => {
-    // Placeholder for CSV export functionality
-    alert('CSV export functionality will be implemented here')
+  const fetchReportData = async () => {
+    try {
+      const params = new URLSearchParams()
+      if (dateRange.from) params.append('dateFrom', dateRange.from)
+      if (dateRange.to) params.append('dateTo', dateRange.to)
+      if (selectedBarangay) params.append('barangay', selectedBarangay)
+
+      const response = await axios.get(`/api/consultations?${params}`)
+      return response.data
+    } catch (error) {
+      console.error('Error fetching report data:', error)
+      toast.error('Failed to fetch report data')
+      return []
+    }
   }
 
-  const handleExportPDF = () => {
-    // Placeholder for PDF export functionality
-    alert('PDF export functionality will be implemented here')
+  const handleExportExcel = async () => {
+    const data = await fetchReportData()
+    if (!data.length) return toast('No data found for these filters', { icon: 'ℹ️' });
+    
+    const formattedData = data.map(c => ({
+      "Date": new Date(c.created_at).toLocaleDateString(),
+      "Patient Name": `${c.first_name} ${c.last_name}`,
+      "Barangay": c.barangay,
+      "Doctor": c.doctor_name,
+      "Diagnosis": c.diagnosis || 'N/A',
+      "Prescription": c.prescription || 'N/A'
+    }));
+
+    exportToExcel(formattedData, `consultations_report_${new Date().getTime()}`);
+    toast.success('Excel exported successfully');
+  }
+
+  const handleExportPDF = async () => {
+    const data = await fetchReportData()
+    if (!data.length) return toast('No data found for these filters', { icon: 'ℹ️' });
+
+    const headers = ["Date", "Patient Name", "Barangay", "Doctor", "Diagnosis", "Prescription"];
+    const rows = data.map(c => [
+      new Date(c.created_at).toLocaleDateString(),
+      `${c.first_name} ${c.last_name}`,
+      c.barangay,
+      c.doctor_name,
+      c.diagnosis || 'N/A',
+      c.prescription || 'N/A'
+    ]);
+
+    exportToPDF(headers, rows, `consultations_report_${new Date().getTime()}`, "Consultations Report");
+    toast.success('PDF exported successfully');
   }
 
   if (loading) {
@@ -72,11 +115,11 @@ const Reports = () => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={handleExportCSV}
+            onClick={handleExportExcel}
             className="btn-secondary flex items-center gap-2"
           >
             <Download size={20} />
-            Export CSV
+            Export Excel
           </motion.button>
           
           <motion.button

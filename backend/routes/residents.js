@@ -117,12 +117,13 @@ router.get('/:id', authenticateToken, (req, res) => {
   });
 });
 
-// Create new resident (Barangay Encoder only)
-router.post('/', authenticateToken, authorizeRole(['barangay']), (req, res) => {
+// Create new resident (Barangay Encoder and RHU Staff)
+router.post('/', authenticateToken, authorizeRole(['barangay', 'rhu']), (req, res) => {
   const residentData = req.body;
   
   // Set initial status and created_by
-  residentData.status = residentData.philhealth_number ? 'Pending RHU Validation' : 'Pending RHU Validation';
+  // If RHU staff creates it, auto-confirm them, otherwise Pending RHU Validation
+  residentData.status = req.user.role === 'rhu' ? 'Awaiting Assessment' : 'Pending RHU Validation';
   residentData.created_by = req.user.id; // Add created_by field
   residentData.created_at = new Date().toISOString();
   
