@@ -974,10 +974,7 @@ const Landing = () => {
             </div>
 
             <div className="flex flex-col items-end gap-3">
-              <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/30 px-3 py-1.5 rounded-full border border-primary-200 dark:border-primary-500/30">
-                <div className="w-2 h-2 bg-primary-500 rounded-full animate-pulse"></div>
-                Systems Active
-              </div>
+              
               <p className="text-xs text-slate-400 dark:text-white/50 font-bold tracking-tight">
                 &copy; 2026 RHU Pinamungahan.
               </p>

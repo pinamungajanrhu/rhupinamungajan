@@ -67,7 +67,7 @@ const Login = () => {
               <img src="/rhu logo-Photoroom.png" alt="RHU Logo" className="w-full h-full object-contain" />
             </div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 leading-tight">
-              Pinamungahan Health System
+              Pinamungajan Health Care System
             </h1>
             <p className="text-gray-600 dark:text-slate-400 font-medium">
               Sign in to your account
